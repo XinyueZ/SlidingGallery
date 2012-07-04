@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="ll_gallery_main_layout" type="id"/>
+    <item name="ll_gallery_pb" type="id"/>
+    <item name="ll_gallery_arrow_left" type="id"/>
+    <item name="ll_gallery_arrow_right" type="id"/>
+    <item name="ll_gallery_trigger_left" type="id"/>
+    <item name="ll_gallery_trigger_right" type="id"/>
+    <item name="ll_gallery_swipable_view" type="id"/>
+    <item name="ll_gallery_indicator" type="id"/>
+    <item name="ll_gallery_indicator_dots" type="id"/>
+    <item name="ll_gallery_comment" type="id"/>
+
+
+    <declare-styleable name="SlideGallery">
+        <attr name="arrowLeftSrc" format="reference" />
+        <attr name="arrowRightSrc" format="reference" />
+        <attr name="arrowPaddingBottom" format="dimension" />
+        <attr name="arrowPaddingLeft" format="dimension" />
+        <attr name="arrowPaddingRight" format="dimension" />
+        <attr name="arrowPaddingTop" format="dimension" />
+        <attr name="dotSelected" format="reference" />
+        <attr name="dotUnselected" format="reference" />
+        <attr name="indicatorHeight" format="dimension" />
+        <attr name="indicatorBackground" format="reference" />
+        <attr name="progressSize" format="dimension" />
+        <attr name="progressSrc" format="reference" />
+        <attr name="marquee" format="integer" />  
+        <attr name="triggerSrc" format="reference" />
+        <attr name="triggerWidth" format="dimension" />
+        <attr name="uplift" format="dimension" />
+    </declare-styleable>
+
+</resources>

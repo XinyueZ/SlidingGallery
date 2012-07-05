@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (C) 2012 Chris Xinyue Zhao <hasszhao@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

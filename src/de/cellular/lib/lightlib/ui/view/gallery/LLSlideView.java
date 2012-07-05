@@ -52,9 +52,20 @@ import de.cellular.lib.lightlib.log.LLL;
  * <p>
  * Client developer can't use the view directly.
  * <p>
- * <li>Currently the view can only show the items whose height is larger than width.
+ * <strong>Weakness of current versions</strong>
+ * <li>{@link LLSlideView} can only show the items whose height is larger than width.</li>
+ * <li>Data source should have equal width and height.</li>
+ * <p>
  * 
- * @version 1.0
+ * @version <strong>1.0.1</strong> <li>Add</li>
+ *          <p>
+ *          {@link LLSlideView#appendImage(Bitmap, int)}
+ *          <p>
+ *          {@link LLSlideView#getCurrentPosition()}
+ *          <p>
+ *          Fixed bug that the single loaded item will disappear.
+ * 
+ * @version <strong>1.0</strong> <li>just a beginning</li>
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  * 
  */
@@ -438,10 +449,9 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
      */
     public void setImages( List<Bitmap> _bitmaps, int _maxWidth ) {
         if( _bitmaps == null ) {
-            LLL.e( "Image source is NULL." );
+            LLL.e( "Bitmap source is NULL." );
         }
-        else
-        {
+        else {
             mBitmaps = _bitmaps;
             mMaxWidthOfBitmaps = _maxWidth;
             mCount = mBitmaps.size();
@@ -460,6 +470,40 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
             if( !mSwipable ) {
                 startAutoRollTimer();
             }
+        }
+    }
+
+    /**
+     * Append an item
+     * 
+     * @param _bitmap
+     *            data source
+     * @param _maxWidth
+     *            max width
+     * @since 1.0.1
+     */
+    public void appendImage( Bitmap _bitmap, int _maxWidth ) {
+        if( _bitmap == null ) {
+            LLL.e( "Bitmap source is NULL." );
+        }
+        else {
+            mParent.findViewById( R.id.ll_gallery_pb ).setVisibility( View.GONE );
+            mMaxWidthOfBitmaps = _maxWidth;
+            mCount++;
+            mBitmaps.add( _bitmap );
+            mCurrentPosition = mCount - 1;
+
+            if( mCount == 1 ) {
+                mCurBmp = mBitmaps.get( mCurrentPosition );
+            }
+            else {
+                mPrevImg = mBitmaps.get( mCurrentPosition - 1 );
+                mCurBmp = mBitmaps.get( mCurrentPosition );
+            }
+
+            invalidate();
+            updateIndicator();
+            setOnClickListener( this );
         }
     }
 
@@ -656,7 +700,7 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
      * @since 1.0
      */
     private void moveItem() {
-        if( mCount > 0 ) {
+        if( mCount > 1 ) {
             stopMoving();
             mMoveHandler.post( moving = new Moving() );
         }
@@ -743,18 +787,20 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
      * @since 1.0
      */
     private void startAutoRollTimer() {
-        stopAutoRollTimer();
-        mAutoRollTimer = new Timer( true );
-        mAutoRollTimer.scheduleAtFixedRate( new TimerTask() {
-            @Override
-            public void run()
-            {
-                if( mCurrentPosition == mCount - 1 ) {
-                    mCurrentPosition = -1;
+        if( mCount > 1 ) {
+            stopAutoRollTimer();
+            mAutoRollTimer = new Timer( true );
+            mAutoRollTimer.scheduleAtFixedRate( new TimerTask() {
+                @Override
+                public void run()
+                {
+                    if( mCurrentPosition == mCount - 1 ) {
+                        mCurrentPosition = -1;
+                    }
+                    moveRight();
                 }
-                moveRight();
-            }
-        }, mAutoRate, mAutoRate );
+            }, mAutoRate, mAutoRate );
+        }
     }
 
     /**
@@ -777,5 +823,15 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
     public void onLowMemory() {
         stopMoving();
         stopAutoRollTimer();
+    }
+
+    /**
+     * Get current item's position.
+     * 
+     * @return the currentPosition
+     * @since 1.0.1
+     */
+    public int getCurrentPosition() {
+        return mCurrentPosition;
     }
 }

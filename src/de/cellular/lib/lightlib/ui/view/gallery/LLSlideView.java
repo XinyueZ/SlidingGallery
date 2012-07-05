@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2012 Chris Xinyue Zhao <hasszhao@gmail.com>
+/**
+ * Copyright (C) 2012 Cellular GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,11 +44,20 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-
-
 import de.cellular.lib.lightlib.R;
 import de.cellular.lib.lightlib.log.LLL;
 
+/**
+ * A sliding view draws bitmaps with finger or without finger under control of timer.
+ * <p>
+ * Client developer can't use the view directly.
+ * <p>
+ * <li>Currently the view can only show the items whose height is larger than width.
+ * 
+ * @version 1.0
+ * @author Chris Xinyue Zhao <hasszhao@gmail.com>
+ * 
+ */
 class LLSlideView extends View implements ComponentCallbacks, OnGestureListener, OnClickListener
 {
     private static final int                   PLUS                = 1;
@@ -117,42 +126,129 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
     private LLSlideView.OnItemScrollListener   mOnItemScrollListener;
     private LLSlideView.OnItemScrolledListener mOnItemScrolledListener;
 
+    /**
+     * Event when user clicks on the shown items.
+     * 
+     * @author Chris Xinyue Zhao <hasszhao@gmail.com>
+     * @since 1.0
+     * 
+     */
     public interface OnItemClickListener {
-        public void onItemClick( int _location );
+        /**
+         * User clicked view.
+         * <p>
+         * It could be < 0, because user could click view while item was moving.
+         * <p>
+         * Please check before handling event.
+         * 
+         * @param _location
+         *            the position of major item.
+         * @since 1.0
+         */
+        public void onItemClicked( int _location );
     }
 
+    /**
+     * Event when item<strong>s</strong> are moving.
+     * 
+     * @author Chris Xinyue Zhao <hasszhao@gmail.com>
+     * @since 1.0
+     * 
+     */
     public interface OnItemScrollListener {
+        /**
+         * Item<strong>s</strong>'re moving.
+         * <p>
+         * It could be < 0, because the view show the last item and begin to show the first one automatically(swipable==false).
+         * <p>
+         * Please check before handling event.
+         * 
+         * @param _location
+         *            the position of current item.
+         * @since 1.0
+         */
         public void onItemScroll( int _location );
     }
 
+    /**
+     * Event when the view has stopped moving item<strong>s</strong>.
+     * 
+     * @author Chris Xinyue Zhao <hasszhao@gmail.com>
+     * @since 1.0
+     * 
+     */
     public interface OnItemScrolledListener {
+        /**
+         * Item<strong>s</strong>'re stopped moving. Show a major item.
+         * <p>
+         * It could be < 0, because the view show the last item and begin to show the first one automatically(swipable==false).
+         * <p>
+         * Please check before handling event.
+         * 
+         * @param _location
+         *            the position of the major item.
+         * @since 1.0
+         */
         public void onItemScrolled( int _location );
     }
 
+    /**
+     * Set listener for click event.
+     * 
+     * @param _listener
+     * @since 1.0
+     */
     public void setOnItemClickListener( LLSlideView.OnItemClickListener _listener ) {
         mOnItemClickListener = _listener;
     }
 
-    public void setOnItemScrollListener( LLSlideView.OnItemScrollListener _onItemScrollListener ) {
-        mOnItemScrollListener = _onItemScrollListener;
+    /**
+     * Set listener for scroll event.
+     * 
+     * @param _listener
+     * @since 1.0
+     */
+    public void setOnItemScrollListener( LLSlideView.OnItemScrollListener _listener ) {
+        mOnItemScrollListener = _listener;
     }
 
-    public void setOnItemScrolledListener( LLSlideView.OnItemScrolledListener _onItemScrolledListener ) {
-        mOnItemScrolledListener = _onItemScrolledListener;
+    /**
+     * Set listener for scrolled event.
+     * 
+     * @param _listener
+     * @since 1.0
+     */
+    public void setOnItemScrolledListener( LLSlideView.OnItemScrolledListener _listener ) {
+        mOnItemScrolledListener = _listener;
     }
 
+    /**
+     * Firing event for clicking on the view.
+     * 
+     * @since 1.0
+     */
     private void onItemClicked() {
         if( mOnItemClickListener != null && mCount > 0 ) {
-            mOnItemClickListener.onItemClick( mCurrentPosition );
+            mOnItemClickListener.onItemClicked( mCurrentPosition );
         }
     }
 
+    /**
+     * Firing event while item<strong>s</strong>'re moving.
+     * 
+     * @since 1.0
+     */
     private void onItemScroll() {
         if( mOnItemScrollListener != null ) {
             mOnItemScrollListener.onItemScroll( mCurrentPosition );
         }
     }
 
+    /**
+     * Firing event when item<strong>s</strong>'re stopped.
+     * 
+     * @since 1.0
+     */
     private void onItemScrolled() {
         if( mOnItemScrolledListener != null ) {
             mOnItemScrolledListener.onItemScrolled( mCurrentPosition );
@@ -163,6 +259,17 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
     // Else Functions
     // -------------------------------------------------------
 
+    /**
+     * Creating a sliding view.
+     * 
+     * @param _cxt
+     *            Context
+     * @param _parent
+     *            View(group) that contains the sliding view.
+     * @param isSwipable
+     *            to decide whether the internal timer should be started to show all items automatically.
+     * @since 1.0
+     */
     public LLSlideView( Context _cxt, View _parent, boolean isSwipable ) {
         this( _cxt );
 
@@ -188,25 +295,47 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
 
         mParent = _parent;
         mCurrentPosition = 0;
-        updateIndicator(   );
+        updateIndicator();
     }
 
+    /**
+     * @deprecated The view can't be created in XML or used directly.
+     * @param _context
+     * @param _attrs
+     * @param _defStyle
+     * @since 1.0
+     */
     private LLSlideView( Context _context, AttributeSet _attrs, int _defStyle ) {
         super( _context, _attrs, _defStyle );
     }
 
+    /**
+     * @deprecated The view can't be created in XML or used directly.
+     * @param _context
+     * @param _attrs
+     * @since 1.0
+     */
     private LLSlideView( Context _context, AttributeSet _attrs ) {
         super( _context, _attrs );
     }
 
+    /**
+     * @deprecated the view can't be created in xml or used directly.
+     * @param _context
+     * @since 1.0
+     */
     private LLSlideView( Context _context ) {
         super( _context );
     }
 
     /**
-     * Opetmize for ViewPager, if the Gallery is installed on a Page of ViewPager and slidable by finger.
+     * Optimize for ViewPager.
+     * <p>
+     * Let the view be sliding when it's shown on a viewpager.
      * 
      * @param _me
+     *            MotionEvent
+     * @since 1.0
      */
     private void requestDisallowParentInterceptTouchEvent( MotionEvent _me ) {
         switch( _me.getAction() )
@@ -247,6 +376,14 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
         return true;
     }
 
+    /**
+     * Make view invalidate and the onDraw will be callbaced.
+     * <p>
+     * It fires {@link LLSlideView#onItemScroll()}.
+     * 
+     * @see {@link LLSlideView#onItemScroll()}.
+     * @since 1.0
+     */
     private void drawItem() {
         onItemScroll();
         invalidate();
@@ -290,6 +427,15 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
         return true;
     }
 
+    /**
+     * Set item source.
+     * 
+     * @param _bitmaps
+     *            data source
+     * @param _maxWidth
+     *            max-width that each item can be shown.
+     * @since 1.0
+     */
     public void setImages( List<Bitmap> _bitmaps, int _maxWidth ) {
         if( _bitmaps == null ) {
             LLL.e( "Image source is NULL." );
@@ -308,7 +454,7 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
 
             mParent.findViewById( R.id.ll_gallery_pb ).setVisibility( View.GONE );
             invalidate();
-            updateIndicator(   );
+            updateIndicator();
             setOnClickListener( this );
 
             if( !mSwipable ) {
@@ -317,7 +463,12 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
         }
     }
 
-    private void updateIndicator(     ) {
+    /**
+     * Update the indicator when an item is selected as major.
+     * 
+     * @since 1.0
+     */
+    private void updateIndicator() {
         if( mBitmaps != null && mDots != null && mDotUnselected != null && mDotSelected != null ) {
             if( mDots.getChildCount() > 0 )
                 mDots.removeAllViews();
@@ -334,7 +485,7 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
                 ivDot.setPadding( 0, 0, 5, 0 );
                 mDots.addView( ivDot );
                 LinearLayout.LayoutParams params = (LayoutParams) ivDot.getLayoutParams();
-                params.gravity=Gravity.CENTER;
+                params.gravity = Gravity.CENTER;
                 ivDot.setLayoutParams( params );
             }
             mArrowLeftMovingRight.setVisibility( (mCurrentPosition <= 0) ? View.INVISIBLE : View.VISIBLE );
@@ -345,7 +496,11 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
     }
 
     /**
-     * Draw current bitmap on the gallery. {@link Moving} provides an illusion that an item is moving animatedly. Draw 3 bitmap as more as possible.
+     * Draw item on the view.
+     * <p>
+     * {@link Moving} provides an illusion that an item is moving animatedly.
+     * 
+     * @since 1.0
      */
     @Override
     public void onDraw( Canvas c ) {
@@ -371,7 +526,9 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
     }
 
     /**
-     * Provide an illusion that an item moves animatedly.
+     * Helper class that provides an illusion that an item moves animatedly.
+     * 
+     * @since 1.0
      */
     private class Moving implements Runnable
     {
@@ -449,7 +606,7 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
         }
 
         private void stop() {
-            updateIndicator( );
+            updateIndicator();
             stopMoving();
             mCanClickButton = true;
         }
@@ -481,11 +638,23 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
         }
     }
 
+    /**
+     * Move item
+     * 
+     * @param _direction
+     *            a moving direction
+     * @since 1.0
+     */
     private void toNextItem( int _direction ) {
         mDirection = _direction;
         moveItem();
     }
 
+    /**
+     * Start moving item after stopping handler first.
+     * 
+     * @since 1.0
+     */
     private void moveItem() {
         if( mCount > 0 ) {
             stopMoving();
@@ -493,6 +662,11 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
         }
     }
 
+    /**
+     * Stop handler to move item
+     * 
+     * @since 1.0
+     */
     private void stopMoving() {
         if( moving != null ) {
             mMoveHandler.removeCallbacks( moving );
@@ -500,26 +674,61 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
         }
     }
 
-    public void moveLeft() {
+    /**
+     * Move item left.
+     * 
+     * @since 1.0
+     */
+    private void moveLeft() {
         toNextItem( MINUS );
     }
 
-    public void moveRight() {
+    /**
+     * Move item right.
+     * 
+     * @since 1.0
+     */
+    private void moveRight() {
         toNextItem( PLUS );
     }
 
+    /**
+     * Set "dot" on the indicator for the selected item.
+     * 
+     * @param _dotSelected
+     *            a Drawable object
+     * @since 1.0
+     */
     public void setDotSelected( Drawable _dotSelected ) {
         mDotSelected = _dotSelected;
     }
 
+    /**
+     * Set "dot" on the indicator for the unselected item.
+     * 
+     * @param _dotUnselected
+     * @since 1.0
+     */
     public void setDotUnselected( Drawable _dotUnselected ) {
         mDotUnselected = _dotUnselected;
     }
 
+    /**
+     * If set true, the view can't be controlled by finger and roll items through timer.
+     * 
+     * @param _swipable
+     *            true->roll item automatically.
+     * @since 1.0
+     */
     public void setSwipable( boolean _swipable ) {
         mSwipable = _swipable;
     }
 
+    /**
+     * Stop timer for moving items automatically.
+     * 
+     * @since 1.0
+     */
     private void stopAutoRollTimer() {
         if( mAutoRollTimer != null ) {
             mAutoRollTimer.cancel();
@@ -528,6 +737,11 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
         }
     }
 
+    /**
+     * Start timer to control moving items automatically.
+     * 
+     * @since 1.0
+     */
     private void startAutoRollTimer() {
         stopAutoRollTimer();
         mAutoRollTimer = new Timer( true );
@@ -543,6 +757,12 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
         }, mAutoRate, mAutoRate );
     }
 
+    /**
+     * Set a rate when the view shows items automatically.
+     * 
+     * @param _autoRate
+     * @since 1.0
+     */
     public void setAutoRate( int _autoRate ) {
         mAutoRate = _autoRate;
     }

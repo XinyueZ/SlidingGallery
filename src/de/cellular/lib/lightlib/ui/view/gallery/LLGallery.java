@@ -37,6 +37,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import de.cellular.lib.lightlib.R;
 import de.cellular.lib.lightlib.log.LLL;
+import de.cellular.lib.lightlib.ui.view.gallery.base.ILLGallery;
 import de.cellular.lib.lightlib.utils.UIUtils;
 
 /**
@@ -54,9 +55,11 @@ import de.cellular.lib.lightlib.utils.UIUtils;
  *          {@link #changeThisViewLayoutAfterAddingItems(int, int)}
  *          <p>
  *          {@link #setImages(List, int) }
+ *          <p>
+ *          Moved most of methods into the interface {@link ILLGallery}.
  * @version <strong>1.0.1</strong> In this version it can append item. <li>Add</li> {@link #appendImage(Bitmap)}
  *          <p>
- *          {@link #appendImageByWidth(Bitmap, int, String)}
+ *          {@link #appendImage(Bitmap, int, String)}
  *          <p>
  *          {@link #appendImage(Bitmap, int, int)}
  *          <p>
@@ -69,7 +72,7 @@ import de.cellular.lib.lightlib.utils.UIUtils;
  * 
  */
 public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClickListener,
-        LLSlideView.OnItemScrolledListener, LLSlideView.OnItemScrollListener
+        LLSlideView.OnItemScrolledListener, LLSlideView.OnItemScrollListener, ILLGallery
 {
     private LLSlideView                      mSlideView;
     private LLGallery.OnItemClickListener    mOnItemClickListener;
@@ -165,11 +168,11 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
     /**
      * Create a gallery
      * 
+     * @since 1.0
      * @param _context
      *            Context
      * @param _attrs
      *            attributes
-     * @since 1.0
      */
     public LLGallery( Context _context, AttributeSet _attrs ) {
         super( _context, _attrs );
@@ -392,19 +395,20 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
 
     /**
      * @deprecated The view can't be created in XML or used directly.
-     * @param _context
      * @since 1.0
+     * @param _context
      */
-    private LLGallery( Context _context ) {
+    protected LLGallery( Context _context ) {
         super( _context );
     }
 
     /**
      * @deprecated The view can't be created in XML or used directly.
+     * @since 1.0
      * @param _context
      * @param _attrs
      * @param _defStyle
-     * @since 1.0
+     * 
      */
     @SuppressWarnings("unused")
     private LLGallery( Context _context, AttributeSet _attrs, int _defStyle ) {
@@ -416,11 +420,13 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
      * <p>
      * <li>Currently the view can only show the items whose height is larger than width.
      * 
+     * @since 1.0
+     * 
      * @param _bitmap
-     *            Image has width > height.
+     *            the image has width > height.
      * @param _width
      * @return the scaled bitmap
-     * @since 1.0
+     * 
      */
     private Bitmap scaleBitmap( Bitmap _bitmap, int _width )
     {
@@ -438,30 +444,12 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
         }
     }
 
-    /**
-     * Set item source.
-     * <p>
-     * <li>Not all source will be shown. Because some items haven't been loaded yet(Internet, resource...etc).
-     * 
-     * @param _bitmaps
-     *            data source
-     * @since 1.0
-     */
+    @Override
     public void setImages( List<Bitmap> _bitmaps ) {
         setImages( _bitmaps, -1 );
     }
 
-    /**
-     * Set item source.
-     * <p>
-     * <li>Not all data source will be shown. Because some items haven't been loaded yet(Internet, resource...etc).
-     * 
-     * @param _bitmaps
-     *            data source
-     * @param _maxWidth
-     *            max-width that each item can be shown.
-     * @since 1.0.2
-     */
+    @Override
     public void setImages( List<Bitmap> _bitmaps, int _maxWidth ) {
         if( _bitmaps == null ) {
             LLL.e( "Image source is NULL." );
@@ -492,14 +480,7 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
         }
     }
 
-    /**
-     * Append an item
-     * 
-     * @param _bmp
-     *            data source
-     * @param _comment
-     * @since 1.0.1
-     */
+    @Override
     public void appendImage( Bitmap _bmp ) {
         if( _bmp != null ) {
             Bitmap scaledBmp = scaleBitmap( _bmp, getWidth() );
@@ -507,29 +488,15 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
         }
     }
 
-    /**
-     * Append an item. Like {@link #setImages(List, int)} the {@link LLGallery} shows the item with associated _maxWidth.
-     * 
-     * @param _bmp
-     *            data source
-     * @param _maxWidth
-     *            max width
-     * @param _comment
-     * @since 1.0.1
-     */
-    public void appendImageByWidth( Bitmap _bmp, int _maxWidth, String _comment ) {
+    @Override
+    public void appendImage( Bitmap _bmp, int _maxWidth, String _comment ) {
         if( _bmp != null ) {
             Bitmap scaledBmp = scaleBitmap( _bmp, _maxWidth );
             appendImage( _bmp, scaledBmp.getWidth(), scaledBmp.getHeight() );
         }
     }
 
-    /**
-     * Append new comment
-     * 
-     * @param _comment
-     * @since 1.0.1
-     */
+    @Override
     public void appendComment( String _comment ) {
         mComments.add( _comment );
     }
@@ -537,13 +504,15 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
     /**
      * Push image to {@link LLSlideView}
      * 
-     * @param _bmp
-     *            data source
-     * @param _toWidth
-     *            max width to be set.
-     * @param _toHeight
-     *            max height to be set.
      * @since 1.0.1
+     * 
+     * @param _bmp
+     *            the data source
+     * @param _toWidth
+     *            the max width to be set.
+     * @param _toHeight
+     *            the max height to be set.
+     * 
      */
     private void appendImage( Bitmap _bmp, int _toWidth, int _toHeight ) {
         changeThisViewLayoutAfterAddingItems( _toWidth, _toHeight );
@@ -553,11 +522,13 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
     /**
      * The layout of <strong>this</strong> view should be resized after adding items.
      * 
-     * @param _toWidth
-     *            the end width
-     * @param _toHeight
-     *            the end height
      * @since 1.0.2
+     * 
+     * @param _toWidth
+     *            the width to set
+     * @param _toHeight
+     *            the height to set
+     * 
      */
     private void changeThisViewLayoutAfterAddingItems( int _toWidth, int _toHeight ) {
         ViewGroup.LayoutParams params = getLayoutParams();
@@ -572,13 +543,15 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
     /**
      * Push items onto {@link LLSlideView}
      * 
-     * @param _bitmaps
-     *            data source
-     * @param _toWidth
-     *            max width
-     * @param _toHeight
-     *            max height
      * @since 1.0
+     * 
+     * @param _bitmaps
+     *            the data source
+     * @param _toWidth
+     *            the width to set
+     * @param _toHeight
+     *            the height to set
+     * 
      */
     private void setImages( List<Bitmap> _bitmaps, int _toWidth, int _toHeight ) {
         changeThisViewLayoutAfterAddingItems( _toWidth, _toHeight );
@@ -590,18 +563,7 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
         }
     }
 
-    /**
-     * Set item source.
-     * <p>
-     * <li>Not all source will be shown. Because some items haven't been loaded yet(Internet, resource...etc).
-     * 
-     * @deprecated use {@link #setImages(List, int)} instead of it.
-     * @param _bitmaps
-     *            data source
-     * @param _maxWidth
-     *            max-width that each item can be shown.
-     * @since 1.0
-     */
+    @Override
     public void setImagesByWidth( List<Bitmap> _bitmaps, int _maxWidth ) {
         if( _bitmaps == null ) {
             LLL.e( "Image source is NULL." );
@@ -630,38 +592,12 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
         }
     }
 
-    /**
-     * Add an array of comments to describe each item.
-     * <p>
-     * <li>If the per-loaded items are null, the correspond comment will be null.
-     * 
-     * @see {@link #setImages(List)}
-     * @see {@link #setImages(List, int)}
-     * @param _commentViewId
-     *            an ID of {@link View} places comments
-     * @param _comments
-     *            the array of comments
-     * @since 1.0.1
-     */
+    @Override
     public void addComments( int _commentViewId, String[] _comments ) {
         addComments( _commentViewId, CommentPosition.BOTTOM, _comments );
     }
 
-    /**
-     * Add an array of comments to describe each item.
-     * <p>
-     * <li>If the per-loaded items are null, the correspond comment will be null.
-     * 
-     * @see {@link #setImages(List)}
-     * @see {@link #setImages(List, int)}
-     * @param _commentViewId
-     *            an ID of {@link View} places comments
-     * @param _pos
-     *            where is the comment {@link CommentPosition}
-     * @param _comments
-     *            the array of comments
-     * @since 1.0.1
-     */
+    @Override
     public void addComments( int _commentViewId, CommentPosition _pos, String[] _comments ) {
         if( mCommentView == null ) {
             setCommentsView( (ViewGroup) View.inflate( getContext(), _commentViewId, null ), _pos );
@@ -671,32 +607,17 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
         showComment( cur >= 0 ? cur : 0 );
     }
 
-    /**
-     * Set listener for click event.
-     * 
-     * @param _listener
-     * @since 1.0
-     */
+    @Override
     public void setOnItemClickListener( LLGallery.OnItemClickListener _listener ) {
         mOnItemClickListener = _listener;
     }
 
-    /**
-     * Set listener for scroll event.
-     * 
-     * @param _listener
-     * @since 1.0
-     */
+    @Override
     public void setOnItemScrollListener( LLGallery.OnItemScrollListener _listener ) {
         mOnItemScrollListener = _listener;
     }
 
-    /**
-     * Set listener for scrolled event.
-     * 
-     * @param _listener
-     * @since 1.0
-     */
+    @Override
     public void setOnItemScrolledListener( LLGallery.OnItemScrolledListener _listener ) {
         mOnItemScrolledListener = _listener;
     }
@@ -726,9 +647,10 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
     /**
      * Show comment
      * 
-     * @param _location
-     *            position of current majoy item.
      * @since 1.0
+     * @param _location
+     *            the position of current major item.
+     * 
      */
     private void showComment( final int _location ) {
         int size = mComments.size();
@@ -754,11 +676,12 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
      * <p>
      * <strong>Each {@link LLGallery} can only have one view for comments.</strong>
      * 
+     * @since 1.0.1
      * @param _commentView
-     *            a layout
+     *            the layout for comments
      * @param _pos
      *            where is the comment {@link CommentPosition}
-     * @since 1.0.1
+     * 
      */
     private void setCommentsView( View _commentView, CommentPosition _pos ) {
         mCommentView = _commentView;

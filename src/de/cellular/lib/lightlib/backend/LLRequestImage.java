@@ -24,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.Message;
 import de.cellular.lib.lightlib.log.LLL;
 import de.cellular.lib.lightlib.utils.UIUtils;
 /**
@@ -55,7 +56,7 @@ public class LLRequestImage extends LLRequestFile
             readStreamToBitmap( ret );
             LLL.i( ":) Reading Bitmap successfully." );
 
-            onResponse( REQUEST_IMAGE_SUCCESSED, ret );
+            super.onResponse( REQUEST_IMAGE_SUCCESSED, ret );
         }
         catch( Exception _e )
         {
@@ -68,7 +69,8 @@ public class LLRequestImage extends LLRequestFile
             }
             // Info UI that it be failed.
             if( mHandler != null ) {
-                mHandler.sendEmptyMessage( REQUEST_IMAGE_FAILED );
+                Message msg = Message.obtain( mHandler, REQUEST_IMAGE_FAILED, new LLRequestException( _e, _r.getUrlStr() ) ); 
+                msg.sendToTarget();
             }
         }
     }

@@ -252,7 +252,7 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
                             mHttpRequestBase.abort();
                         }
                         LLL.e( ":) The exception has been caught: " + _e.toString() );
-                        ret = _e;
+                        ret = new LLRequestException( _e, urlstr );
                     }
                 }
                 else {

@@ -31,16 +31,17 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
-
 import de.cellular.lib.lightlib.backend.LLRequest;
 import de.cellular.lib.lightlib.backend.LLRequestImage;
+import de.cellular.lib.lightlib.backend.base.ILLRequestResponsible;
 import de.cellular.lib.lightlib.log.LLL;
 import de.cellular.lib.lightlib.ui.anim.Rotate3dAnimation;
+
 /**
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
- *
+ * 
  */
-public class LLRequestingFragment extends Fragment implements Callback
+public abstract class LLRequestingFragment extends Fragment implements Callback, ILLRequestResponsible
 {
     private static long FLIP_ANIMATION_DURATION_IN  = 300;
     private static long FLIP_ANIMATION_DURATION_OUT = 300;
@@ -176,28 +177,28 @@ public class LLRequestingFragment extends Fragment implements Callback
         }
     }
 
-    protected void onRequestFinished( Message _msg ) {
-    }
+    @Override
+    public abstract void onRequestFinished( Message _msg );
 
-    protected void onRequestImageFailed( Message _msg ) {
-    }
+    @Override
+    public abstract void onRequestImageFailed( Message _msg );
 
-    protected void onRequestImageSuccessed( Message _msg ) {
-    }
+    @Override
+    public abstract void onRequestImageSuccessed( Message _msg );
 
-    protected void onRequestAborted( Message _msg ) {
-    }
+    @Override
+    public abstract void onRequestAborted( Message _msg );
 
-    protected void onRequestSuccessed( Message _msg ) {
-    }
+    @Override
+    public abstract void onRequestSuccessed( Message _msg );
 
-    protected void onRequestFailed( Message _msg ) {
-    }
+    @Override
+    public abstract void onRequestFailed( Message _msg );
 
     // -------------------------------------------------------
     // 3rd party animations
     // -------------------------------------------------------
- 
+
     protected void startRotate3dAnimationIn() {
         // Initialize the animations.
         Display display = ((WindowManager) getActivity().getSystemService( Context.WINDOW_SERVICE ))
@@ -234,7 +235,7 @@ public class LLRequestingFragment extends Fragment implements Callback
         if( getView() != null )
             getView().startAnimation( inAnim );
     }
- 
+
     protected void startRotate3dAnimationOut() {
         // Initialize the animations.
         Display display = ((WindowManager) getActivity().getSystemService( Context.WINDOW_SERVICE ))

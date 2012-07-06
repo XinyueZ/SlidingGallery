@@ -56,6 +56,7 @@ import de.cellular.lib.lightlib.utils.UIUtils;
  *          {@link LLGallery#setCommentsView(View,CommentPosition)}
  *          <p>
  *          Comments are now saved in a list.
+ *          <p>
  * @version <strong>1.0</strong> <li>just a beginning</li>
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  * 

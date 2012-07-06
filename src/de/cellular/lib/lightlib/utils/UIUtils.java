@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (C) 2012 Chris Xinyue Zhao <hasszhao@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -101,6 +101,15 @@ public class UIUtils
                                                        }
                                                    };
 
+    /**
+     * Adds the blocking progress indicator.
+     * 
+     * @param _context
+     *            the _context
+     * @param _resId
+     *            the _res id
+     * @return the view
+     */
     public static View addBlockingProgressIndicator( Activity _context, int _resId )
     {
         View progressView = LayoutInflater.from( _context ).inflate( _resId, null );
@@ -110,21 +119,49 @@ public class UIUtils
         return progressView;
     }
 
-//    public static View addBlockingProgress( Activity _context )
-//    {
-//        return addBlockingProgressIndicator( _context, R.layout.activity_progress );
-//    }
+    // public static View addBlockingProgress( Activity _context )
+    // {
+    // return addBlockingProgressIndicator( _context, R.layout.activity_progress );
+    // }
 
+    /**
+     * Creates the progress dialog.
+     * 
+     * @param _activity
+     *            the _activity
+     * @param _message
+     *            the _message
+     * @param _cancelable
+     *            the _cancelable
+     * @return the progress dialog
+     */
     public static ProgressDialog createProgressDialog( Context _activity, int _message, boolean _cancelable )
     {
         return ProgressDialog.show( _activity, "", _activity.getString( _message ), false, _cancelable );
     }
 
+    /**
+     * Creates the progress dialog.
+     *
+     * @param _activity the _activity
+     * @param _message the _message
+     * @param _cancelable the _cancelable
+     * @return the progress dialog
+     */
     public static ProgressDialog createProgressDialog( Context _activity, String _message, boolean _cancelable )
     {
         return ProgressDialog.show( _activity, "", _message, false, _cancelable );
     }
 
+    /**
+     * Creates the alert.
+     *
+     * @param _context the _context
+     * @param _messageId the _message id
+     * @param _buttonTextId the _button text id
+     * @param _onOkClickedListener the _on ok clicked listener
+     * @return the alert dialog
+     */
     public static AlertDialog createAlert( Context _context, int _messageId, int _buttonTextId,
             DialogInterface.OnClickListener _onOkClickedListener )
     {
@@ -134,6 +171,17 @@ public class UIUtils
                 .create();
     }
 
+    /**
+     * Creates the alert.
+     *
+     * @param _context the _context
+     * @param _messageId the _message id
+     * @param _button1TextId the _button1 text id
+     * @param _button2TextId the _button2 text id
+     * @param _onButton1ClickedListener the _on button1 clicked listener
+     * @param _onButton2ClickedListener the _on button2 clicked listener
+     * @return the alert dialog
+     */
     public static AlertDialog createAlert( Context _context,
             int _messageId,
             int _button1TextId,
@@ -148,6 +196,20 @@ public class UIUtils
                 .create();
     }
 
+   
+    /**
+     * Creates the alert.
+     *
+     * @param _context the _context
+     * @param _messageId the _message id
+     * @param _button1TextId the _button1 text id
+     * @param _button2TextId the _button2 text id
+     * @param _button3TextId the _button3 text id
+     * @param _onButton1ClickedListener the _on button1 clicked listener
+     * @param _onButton2ClickedListener the _on button2 clicked listener
+     * @param _onButton3ClickedListener the _on button3 clicked listener
+     * @return the alert dialog
+     */
     public static AlertDialog createAlert( Context _context,
             int _messageId,
             int _button1TextId,
@@ -165,6 +227,17 @@ public class UIUtils
                 .create();
     }
 
+    /**
+     * Creates the alert.
+     *
+     * @param _context the _context
+     * @param _message the _message
+     * @param _button1TextId the _button1 text id
+     * @param _button2TextId the _button2 text id
+     * @param _onButton1ClickedListener the _on button1 clicked listener
+     * @param _onButton2ClickedListener the _on button2 clicked listener
+     * @return the alert dialog
+     */
     public static AlertDialog createAlert( Context _context,
             String _message,
             int _button1TextId,
@@ -178,6 +251,15 @@ public class UIUtils
                 .create();
     }
 
+    /**
+     * Creates the alert.
+     *
+     * @param _context the _context
+     * @param _message the _message
+     * @param _btn1 the _btn1
+     * @param _onClickListener the _on click listener
+     * @return the dialog
+     */
     public static Dialog createAlert( Context _context, String _message, String _btn1,
             DialogInterface.OnClickListener _onClickListener )
     {
@@ -187,6 +269,17 @@ public class UIUtils
                 .create();
     }
 
+    /**
+     * Creates the alert.
+     *
+     * @param _context the _context
+     * @param _message the _message
+     * @param _btn1 the _btn1
+     * @param _btn2 the _btn2
+     * @param _onButton1ClickedListener the _on button1 clicked listener
+     * @param _onButton2ClickedListener the _on button2 clicked listener
+     * @return the dialog
+     */
     public static Dialog createAlert( Context _context, String _message, String _btn1, String _btn2,
             DialogInterface.OnClickListener _onButton1ClickedListener,
             DialogInterface.OnClickListener _onButton2ClickedListener )
@@ -198,6 +291,14 @@ public class UIUtils
                 .create();
     }
 
+    /**
+     * Creates the alert.
+     *
+     * @param _context the _context
+     * @param _messageId the _message id
+     * @param _buttonTextId the _button text id
+     * @return the alert dialog
+     */
     public static AlertDialog createAlert( Context _context, int _messageId, int _buttonTextId )
     {
         return new AlertDialog.Builder( _context ).setMessage( _messageId )
@@ -213,6 +314,15 @@ public class UIUtils
                 .create();
     }
 
+    /**
+     * Creates the alter no cancel.
+     *
+     * @param _context the _context
+     * @param _messageId the _message id
+     * @param _buttonTextId the _button text id
+     * @param _listener the _listener
+     * @return the alert dialog
+     */
     public static AlertDialog createAlterNoCancel( Context _context, int _messageId, int _buttonTextId
             , OnClickListener _listener )
     {
@@ -222,6 +332,14 @@ public class UIUtils
                 .create();
     }
 
+    /**
+     * Creates the alert.
+     *
+     * @param _context the _context
+     * @param _message the _message
+     * @param _buttonTextId the _button text id
+     * @return the alert dialog
+     */
     public static AlertDialog createAlert( Context _context, String _message, int _buttonTextId )
     {
         return new AlertDialog.Builder( _context ).setMessage( _message )
@@ -346,7 +464,7 @@ public class UIUtils
         Bitmap resizedBitmap = Bitmap.createBitmap( bitmap, 0, 0, width, height, matrix, true );
         return resizedBitmap;
     }
-    
+
     /**
      * Scale bitmap
      * 

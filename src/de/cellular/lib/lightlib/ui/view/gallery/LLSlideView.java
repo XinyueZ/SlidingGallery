@@ -64,7 +64,7 @@ import de.cellular.lib.lightlib.log.LLL;
  *          {@link LLSlideView#getCurrentPosition()}
  *          <p>
  *          Fixed bug that the single loaded item will disappear.
- * 
+ *          <p>
  * @version <strong>1.0</strong> <li>just a beginning</li>
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  * 

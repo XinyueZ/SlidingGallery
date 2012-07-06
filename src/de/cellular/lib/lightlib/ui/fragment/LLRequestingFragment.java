@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Chris Xinyue Zhao <hasszhao@gmail.com>
+ * Copyright (C) 2012 Cellular GmbH 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,10 @@ import de.cellular.lib.lightlib.backend.LLRequest;
 import de.cellular.lib.lightlib.backend.LLRequestImage;
 import de.cellular.lib.lightlib.log.LLL;
 import de.cellular.lib.lightlib.ui.anim.Rotate3dAnimation;
-
+/**
+ * @author Chris Xinyue Zhao <hasszhao@gmail.com>
+ *
+ */
 public class LLRequestingFragment extends Fragment implements Callback
 {
     private static long FLIP_ANIMATION_DURATION_IN  = 300;

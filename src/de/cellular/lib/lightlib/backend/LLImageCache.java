@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (C) 2011 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import android.graphics.Bitmap;
 import android.util.Log;
-
+/**
+ * @author Chris Xinyue Zhao <hasszhao@gmail.com>
+ *
+ */
 public class LLImageCache {
 
 	public static final String DEBUG_TAG="ImageCache";

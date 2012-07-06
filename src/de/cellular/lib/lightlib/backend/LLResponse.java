@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2012 Chris Xinyue Zhao <hasszhao@gmail.com>
+/**
+ * Copyright (C) 2012 Cellular GmbH 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,10 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.text.TextUtils;
 
 import de.cellular.lib.lightlib.log.LLL;
-
+/**
+ * @author Chris Xinyue Zhao <hasszhao@gmail.com>
+ *
+ */
 public class LLResponse extends LLBaseResponse
 {
     private DefaultHttpClient mClient;

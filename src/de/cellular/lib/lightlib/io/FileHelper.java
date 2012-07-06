@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2012 Chris Xinyue Zhao <hasszhao@gmail.com>
+/**
+ * Copyright (C) 2012 Cellular GmbH 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,10 @@ import android.content.Context;
 import android.os.Environment;
 
 import de.cellular.lib.lightlib.log.LLL;
-
+/**
+ * @author Chris Xinyue Zhao <hasszhao@gmail.com>
+ *
+ */
 public class FileHelper 
 {
     private static final int CELL_SIZE = 1024;

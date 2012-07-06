@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2012 Chris Xinyue Zhao <hasszhao@gmail.com>
+/**
+ * Copyright (C) 2012 Cellular GmbH 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,9 @@ import android.content.res.Configuration;
 /**
  * Factory and adapter of {@link LLThreadPool}
  * 
- * @author Chris.Z
+ * 
+ * @author Chris Xinyue Zhao <hasszhao@gmail.com>
+ * 
  * 
  */
 public class LLThreadPoolWrapper implements ComponentCallbacks
@@ -67,7 +69,7 @@ public class LLThreadPoolWrapper implements ComponentCallbacks
         wrapper.mPool = new LLThreadPool( _corePoolSize, _maximumPoolSize,
                 120, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<Runnable>( _queueSize ), _rejectedHandler
-                ); 
+                );
         return wrapper;
     }
 
@@ -124,25 +126,26 @@ public class LLThreadPoolWrapper implements ComponentCallbacks
     {
         getPool().proceedTasks();
     }
-    
+
     /**
      * Execute a task
+     * 
      * @param _task
      */
     public void execute( Runnable _task )
     {
         getPool().execute( _task );
     }
-    
 
     /**
      * Execute a task
+     * 
      * @param <T>
      * @param _task
      */
     public Future<?> submit( Callable<?> _task )
     {
-        return  getPool().submit( _task );
+        return getPool().submit( _task );
     }
 
     /**

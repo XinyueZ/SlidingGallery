@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2012 Chris Xinyue Zhao <hasszhao@gmail.com>
+/**
+ * Copyright (C) 2012 Cellular GmbH 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,10 @@ import android.text.TextUtils;
 import android.webkit.WebView;
 
 import de.cellular.lib.lightlib.log.LLL;
-
+/**
+ * @author Chris Xinyue Zhao <hasszhao@gmail.com>
+ *
+ */
 public class LLRequest extends AsyncTask<Object, Object, Exception>
 {
     private HttpRequestBase    mHttpRequestBase;

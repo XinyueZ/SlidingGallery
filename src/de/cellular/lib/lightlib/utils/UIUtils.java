@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 Chris Xinyue Zhao <hasszhao@gmail.com>
+ * Copyright (C) 2012 Cellular GmbH 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,8 @@ import de.cellular.lib.lightlib.log.LLL;
 /**
  * Define UI utils here. Some dialog, popup, progress dialog etc...
  * 
- * @author Chris .Z
+ * @author Chris Xinyue Zhao <hasszhao@gmail.com>
+ * 
  * 
  */
 public class UIUtils
@@ -142,10 +143,13 @@ public class UIUtils
 
     /**
      * Creates the progress dialog.
-     *
-     * @param _activity the _activity
-     * @param _message the _message
-     * @param _cancelable the _cancelable
+     * 
+     * @param _activity
+     *            the _activity
+     * @param _message
+     *            the _message
+     * @param _cancelable
+     *            the _cancelable
      * @return the progress dialog
      */
     public static ProgressDialog createProgressDialog( Context _activity, String _message, boolean _cancelable )
@@ -155,11 +159,15 @@ public class UIUtils
 
     /**
      * Creates the alert.
-     *
-     * @param _context the _context
-     * @param _messageId the _message id
-     * @param _buttonTextId the _button text id
-     * @param _onOkClickedListener the _on ok clicked listener
+     * 
+     * @param _context
+     *            the _context
+     * @param _messageId
+     *            the _message id
+     * @param _buttonTextId
+     *            the _button text id
+     * @param _onOkClickedListener
+     *            the _on ok clicked listener
      * @return the alert dialog
      */
     public static AlertDialog createAlert( Context _context, int _messageId, int _buttonTextId,
@@ -173,13 +181,19 @@ public class UIUtils
 
     /**
      * Creates the alert.
-     *
-     * @param _context the _context
-     * @param _messageId the _message id
-     * @param _button1TextId the _button1 text id
-     * @param _button2TextId the _button2 text id
-     * @param _onButton1ClickedListener the _on button1 clicked listener
-     * @param _onButton2ClickedListener the _on button2 clicked listener
+     * 
+     * @param _context
+     *            the _context
+     * @param _messageId
+     *            the _message id
+     * @param _button1TextId
+     *            the _button1 text id
+     * @param _button2TextId
+     *            the _button2 text id
+     * @param _onButton1ClickedListener
+     *            the _on button1 clicked listener
+     * @param _onButton2ClickedListener
+     *            the _on button2 clicked listener
      * @return the alert dialog
      */
     public static AlertDialog createAlert( Context _context,
@@ -196,18 +210,25 @@ public class UIUtils
                 .create();
     }
 
-   
     /**
      * Creates the alert.
-     *
-     * @param _context the _context
-     * @param _messageId the _message id
-     * @param _button1TextId the _button1 text id
-     * @param _button2TextId the _button2 text id
-     * @param _button3TextId the _button3 text id
-     * @param _onButton1ClickedListener the _on button1 clicked listener
-     * @param _onButton2ClickedListener the _on button2 clicked listener
-     * @param _onButton3ClickedListener the _on button3 clicked listener
+     * 
+     * @param _context
+     *            the _context
+     * @param _messageId
+     *            the _message id
+     * @param _button1TextId
+     *            the _button1 text id
+     * @param _button2TextId
+     *            the _button2 text id
+     * @param _button3TextId
+     *            the _button3 text id
+     * @param _onButton1ClickedListener
+     *            the _on button1 clicked listener
+     * @param _onButton2ClickedListener
+     *            the _on button2 clicked listener
+     * @param _onButton3ClickedListener
+     *            the _on button3 clicked listener
      * @return the alert dialog
      */
     public static AlertDialog createAlert( Context _context,
@@ -229,13 +250,19 @@ public class UIUtils
 
     /**
      * Creates the alert.
-     *
-     * @param _context the _context
-     * @param _message the _message
-     * @param _button1TextId the _button1 text id
-     * @param _button2TextId the _button2 text id
-     * @param _onButton1ClickedListener the _on button1 clicked listener
-     * @param _onButton2ClickedListener the _on button2 clicked listener
+     * 
+     * @param _context
+     *            the _context
+     * @param _message
+     *            the _message
+     * @param _button1TextId
+     *            the _button1 text id
+     * @param _button2TextId
+     *            the _button2 text id
+     * @param _onButton1ClickedListener
+     *            the _on button1 clicked listener
+     * @param _onButton2ClickedListener
+     *            the _on button2 clicked listener
      * @return the alert dialog
      */
     public static AlertDialog createAlert( Context _context,
@@ -253,11 +280,15 @@ public class UIUtils
 
     /**
      * Creates the alert.
-     *
-     * @param _context the _context
-     * @param _message the _message
-     * @param _btn1 the _btn1
-     * @param _onClickListener the _on click listener
+     * 
+     * @param _context
+     *            the _context
+     * @param _message
+     *            the _message
+     * @param _btn1
+     *            the _btn1
+     * @param _onClickListener
+     *            the _on click listener
      * @return the dialog
      */
     public static Dialog createAlert( Context _context, String _message, String _btn1,
@@ -271,13 +302,19 @@ public class UIUtils
 
     /**
      * Creates the alert.
-     *
-     * @param _context the _context
-     * @param _message the _message
-     * @param _btn1 the _btn1
-     * @param _btn2 the _btn2
-     * @param _onButton1ClickedListener the _on button1 clicked listener
-     * @param _onButton2ClickedListener the _on button2 clicked listener
+     * 
+     * @param _context
+     *            the _context
+     * @param _message
+     *            the _message
+     * @param _btn1
+     *            the _btn1
+     * @param _btn2
+     *            the _btn2
+     * @param _onButton1ClickedListener
+     *            the _on button1 clicked listener
+     * @param _onButton2ClickedListener
+     *            the _on button2 clicked listener
      * @return the dialog
      */
     public static Dialog createAlert( Context _context, String _message, String _btn1, String _btn2,
@@ -293,10 +330,13 @@ public class UIUtils
 
     /**
      * Creates the alert.
-     *
-     * @param _context the _context
-     * @param _messageId the _message id
-     * @param _buttonTextId the _button text id
+     * 
+     * @param _context
+     *            the _context
+     * @param _messageId
+     *            the _message id
+     * @param _buttonTextId
+     *            the _button text id
      * @return the alert dialog
      */
     public static AlertDialog createAlert( Context _context, int _messageId, int _buttonTextId )
@@ -316,11 +356,15 @@ public class UIUtils
 
     /**
      * Creates the alter no cancel.
-     *
-     * @param _context the _context
-     * @param _messageId the _message id
-     * @param _buttonTextId the _button text id
-     * @param _listener the _listener
+     * 
+     * @param _context
+     *            the _context
+     * @param _messageId
+     *            the _message id
+     * @param _buttonTextId
+     *            the _button text id
+     * @param _listener
+     *            the _listener
      * @return the alert dialog
      */
     public static AlertDialog createAlterNoCancel( Context _context, int _messageId, int _buttonTextId
@@ -334,10 +378,13 @@ public class UIUtils
 
     /**
      * Creates the alert.
-     *
-     * @param _context the _context
-     * @param _message the _message
-     * @param _buttonTextId the _button text id
+     * 
+     * @param _context
+     *            the _context
+     * @param _message
+     *            the _message
+     * @param _buttonTextId
+     *            the _button text id
      * @return the alert dialog
      */
     public static AlertDialog createAlert( Context _context, String _message, int _buttonTextId )

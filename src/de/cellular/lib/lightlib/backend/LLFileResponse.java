@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2012 Chris Xinyue Zhao <hasszhao@gmail.com>
+/**
+ * Copyright (C) 2012 Cellular GmbH 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,21 +27,25 @@ import org.apache.http.cookie.Cookie;
 import de.cellular.lib.lightlib.backend.LLBaseResponse;
 import de.cellular.lib.lightlib.backend.LLResponse;
 
+/**
+ * @author Chris Xinyue Zhao <hasszhao@gmail.com>
+ * 
+ */
 public class LLFileResponse extends LLResponse {
-     
-    private File   mOutput;
+
+    private File           mOutput;
     private LLBaseResponse mBaseResponse;
 
     public LLFileResponse( LLBaseResponse _baseResponse, File _file ) {
         super( _baseResponse.getUrlStr() );
         mBaseResponse = _baseResponse;
-        mOutput = _file; 
+        mOutput = _file;
     }
 
     public File getOutputFile() {
         return mOutput;
-    }  
-    
+    }
+
     @Override
     public List<Cookie> getCookies() {
         return mBaseResponse.getCookies();
@@ -56,18 +60,17 @@ public class LLFileResponse extends LLResponse {
     public String getUrlStr() {
         return mBaseResponse.getUrlStr();
     }
- 
- 
+
     @Override
     public void release() throws IOException {
         mBaseResponse.release();
     }
-     
+
     @Override
-    public String toString() { 
+    public String toString() {
         return "Image-Response@" + getUrlStr();
     }
-    
+
     public Map<String, Object> getTags() {
         return mBaseResponse.getTags();
     }

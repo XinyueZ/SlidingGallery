@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2012 Chris Xinyue Zhao <hasszhao@gmail.com>
+/**
+ * Copyright (C) 2012 Cellular GmbH 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
 
 package de.cellular.lib.lightlib.concurrent;
 
-
 /**
  * A task that can be suspended and proceed.
  * 
  * @see http://javawiki.sowas.com/doku.php?id=java:thread-pausieren
  * @see http://www.javamex.com/tutorials/wait_notify_how_to.shtml
  * 
- * @author Chris.Z
+ * 
+ * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  * 
  */
 public abstract class LLTask implements Runnable

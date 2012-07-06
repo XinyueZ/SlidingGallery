@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2012 Chris Xinyue Zhao <hasszhao@gmail.com>
+/**
+ * Copyright (C) 2012 Cellular GmbH 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,7 @@ import android.util.Log;
 /**
  * My logger class
  * 
- * @author chris
- * 
+ * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  */
 public class LLL
 {
@@ -30,7 +29,7 @@ public class LLL
 
     private static final String DEBUG_TAG  = "#!#!";
 
-    private static LLL       sLogger    = new LLL();
+    private static LLL          sLogger    = new LLL();
 
     private static String mkMessage( String msg )
     {

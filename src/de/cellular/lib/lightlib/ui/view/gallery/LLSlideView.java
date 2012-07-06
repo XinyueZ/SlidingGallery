@@ -59,9 +59,9 @@ import de.cellular.lib.lightlib.log.LLL;
  * 
  * @version <strong>1.0.1</strong> <li>Add</li>
  *          <p>
- *          {@link LLSlideView#appendImage(Bitmap, int)}
+ *          {@link #appendImage(Bitmap, int)}
  *          <p>
- *          {@link LLSlideView#getCurrentPosition()}
+ *          {@link #getCurrentPosition()}
  *          <p>
  *          Fixed bug that the single loaded item will disappear.
  *          <p>
@@ -390,9 +390,9 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
     /**
      * Make view invalidate and the onDraw will be callbaced.
      * <p>
-     * It fires {@link LLSlideView#onItemScroll()}.
+     * It fires {@link #onItemScroll()}.
      * 
-     * @see {@link LLSlideView#onItemScroll()}.
+     * @see {@link #onItemScroll()}.
      * @since 1.0
      */
     private void drawItem() {

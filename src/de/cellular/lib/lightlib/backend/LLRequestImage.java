@@ -22,14 +22,14 @@ import java.io.IOException;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import de.cellular.lib.lightlib.log.LLL;
 import de.cellular.lib.lightlib.utils.UIUtils;
+
 /**
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
- *
+ * 
  */
 public class LLRequestImage extends LLRequestFile
 {
@@ -69,7 +69,8 @@ public class LLRequestImage extends LLRequestFile
             }
             // Info UI that it be failed.
             if( mHandler != null ) {
-                Message msg = Message.obtain( mHandler, REQUEST_IMAGE_FAILED, new LLRequestException( _e, _r.getUrlStr() ) ); 
+                Message msg = Message.obtain( mHandler, REQUEST_IMAGE_FAILED,
+                        new LLRequestException( _e, _r.getUrlStr() ) );
                 msg.sendToTarget();
             }
         }
@@ -77,37 +78,49 @@ public class LLRequestImage extends LLRequestFile
 
     private void readStreamToBitmap( LLImageResponse _r ) throws IOException {
         if( _r.getInputStream() != null ) {
-            Bitmap retBp = BitmapFactory.decodeStream( _r.getInputStream() );
-            if( retBp != null ) {
-                LLL.d( ":) A Bitmap has been decoded successfully." );
-            }
-            else {
-                // --------------------------------------------------------------------------------------------------------------------
-                // The raw bitmap could be too big, so that we can't decode it directly.
-                // It should be loaded by scaling down after being downloaded as a temp file.
-                // see and helper:
-                // http://developer.android.com/intl/zh-CN/training/displaying-bitmaps/load-bitmap.html#load-bitmap
-                // --------------------------------------------------------------------------------------------------------------------
-                LLL.d( ":| A Bitmap has been decoded failed, try to adjust a new one." );
-                File tmpFile = createOutputFile( _r, Uri.parse( _r.getUrlStr() ).getLastPathSegment() );
-                final BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                retBp = BitmapFactory.decodeFile( tmpFile.getAbsolutePath(), options );
-                if( retBp != null ) {
-                    LLL.d( ":) A new Bitmap(from temp file) has been decoded successfully." );
-                }
-                else {
+            Bitmap retBp = null;
+            try {
+                retBp = BitmapFactory.decodeStream( _r.getInputStream() );
+                if( retBp == null ) {
+                    final BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = true;
+                    BitmapFactory.decodeStream( _r.getInputStream(), null, options );
                     options.inSampleSize = calculateInSampleSize( options, mReqSize.reqWidth, mReqSize.reqHeight );
                     options.inJustDecodeBounds = false;
-                    retBp = BitmapFactory.decodeFile( tmpFile.getAbsolutePath(), options );
+                    retBp = BitmapFactory.decodeStream( _r.getInputStream(), null, options );
                     if( retBp != null ) {
-                        LLL.d( ":) A new resized Bitmap(from temp file) has been decoded successfully." );
+                        LLL.i( ":) Decoded stream with some options successfully." );
                     }
-                    else{
-                        LLL.e( ":( Give up! The Bitmap can't be decoded definitly." ); 
+                    else {
+                        throw new Exception();
                     }
                 }
             }
+            catch( Exception _e ) {
+                LLL.e( ":( Faild, try to download the object." );
+                String fname = System.currentTimeMillis() + ".tmp";
+                File tmpFile = createOutputFile( _r, fname );
+                try {
+                    retBp = BitmapFactory.decodeFile( tmpFile.getAbsolutePath() );
+                    if( retBp == null )   {
+                        final BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inJustDecodeBounds = true;
+                        BitmapFactory.decodeFile( tmpFile.getAbsolutePath(), options );
+                        options.inSampleSize = calculateInSampleSize( options, mReqSize.reqWidth,  mReqSize.reqHeight );
+                        options.inJustDecodeBounds = false;
+                        retBp = BitmapFactory.decodeFile( tmpFile.getAbsolutePath(), options );
+                        if( retBp != null ) {
+                            LLL.i( ":) Decoded file with some options successfully." );
+                        }
+                        else {
+                            throw new Exception();
+                        } 
+                    }
+                }
+                catch( Exception _ee ) {
+                    LLL.e( ":( Give up! The Bitmap can't be decoded definitly." );
+                }
+            } 
             // Scale the image and cache it.
             retBp = doScalingImage( retBp );
             LLImageCache.setSendungImage( _r.getUrlStr(), retBp );

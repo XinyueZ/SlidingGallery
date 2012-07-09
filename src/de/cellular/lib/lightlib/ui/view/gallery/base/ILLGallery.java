@@ -25,12 +25,19 @@ import de.cellular.lib.lightlib.ui.view.gallery.LLGallery.CommentPosition;
 /**
  * Provides generic interface for a LLGallery.
  * 
- * @version 1.0
+ * @version <strong>1.0.1 </strong> <li>Add {@link #showComment}</li>
+ *          <p>
+ *          <strong> 1.0 </strong>
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  * 
  */
 public interface ILLGallery {
 
+    /**
+     * @since 1.0.1
+     * @return the view for comments
+     */
+    View getCommentsView();
     /**
      * Set item source.
      * <p>
@@ -168,4 +175,14 @@ public interface ILLGallery {
      * 
      */
     void setOnItemScrolledListener( LLGallery.OnItemScrolledListener _listener );
+
+    /**
+     * Show comment
+     * 
+     * @since 1.0.1
+     * @param _location
+     *            the position of current major item.
+     * 
+     */
+    void showComment( final int _location );
 }

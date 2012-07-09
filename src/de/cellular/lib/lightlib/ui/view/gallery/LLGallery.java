@@ -48,6 +48,10 @@ import de.cellular.lib.lightlib.utils.UIUtils;
  * <li>Data source should have equal width and height.</li>
  * <p>
  * 
+ * @version <strong>1.0.3</strong>
+ *          <p>
+ *          <li>Pass downloaded bitmaps to client are available in listeners</li>
+ *          <p>
  * @version <strong>1.0.2</strong> Deprecated {@link #setImagesByWidth} replaced with {@link #setImages(List, int) } and fixed bug in it.
  *          <p>
  *          <li>Add</li>
@@ -116,9 +120,11 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
          * 
          * @param _location
          *            the position of major item.
+         * @param _bitmaps
+         *            the downloaded bitmaps
          * @since 1.0
          */
-        public void onItemClick( int _location );
+        public void onItemClick( int _location, List<Bitmap> _bitmaps );
     }
 
     /**
@@ -138,9 +144,11 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
          * 
          * @param _location
          *            the position of current item.
+         * @param _bitmaps
+         *            the downloaded bitmaps
          * @since 1.0
          */
-        public void onItemScroll( int _location );
+        public void onItemScroll( int _location, List<Bitmap> _bitmaps );
     }
 
     /**
@@ -160,9 +168,11 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
          * 
          * @param _location
          *            the position of the major item.
+         * @param _bitmaps
+         *            the downloaded bitmaps
          * @since 1.0
          */
-        public void onItemScrolled( int _location );
+        public void onItemScrolled( int _location, List<Bitmap> _bitmaps );
     }
 
     /**
@@ -602,7 +612,9 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
         if( mCommentView == null ) {
             setCommentsView( (ViewGroup) View.inflate( getContext(), _commentViewId, null ), _pos );
         }
-        mComments.addAll( Arrays.asList( _comments ) );
+        if( null != _comments ) {
+            mComments.addAll( Arrays.asList( _comments ) );
+        }
         int cur = mSlideView.getCurrentPosition();
         showComment( cur >= 0 ? cur : 0 );
     }
@@ -623,36 +635,29 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
     }
 
     @Override
-    public void onItemClicked( int _location ) {
+    public void onItemClicked( int _location, List<Bitmap> _bitmaps ) {
         if( mOnItemClickListener != null ) {
-            mOnItemClickListener.onItemClick( _location );
+            mOnItemClickListener.onItemClick( _location, _bitmaps );
         }
     }
 
     @Override
-    public void onItemScroll( int _location ) {
+    public void onItemScroll( int _location, List<Bitmap> _bitmaps ) {
         if( mOnItemScrollListener != null ) {
-            mOnItemScrollListener.onItemScroll( _location );
+            mOnItemScrollListener.onItemScroll( _location, _bitmaps );
         }
     }
 
     @Override
-    public void onItemScrolled( int _location ) {
+    public void onItemScrolled( int _location, List<Bitmap> _bitmaps ) {
         showComment( _location );
         if( mOnItemScrolledListener != null ) {
-            mOnItemScrolledListener.onItemScrolled( _location );
+            mOnItemScrolledListener.onItemScrolled( _location, _bitmaps );
         }
     }
 
-    /**
-     * Show comment
-     * 
-     * @since 1.0
-     * @param _location
-     *            the position of current major item.
-     * 
-     */
-    private void showComment( final int _location ) {
+    @Override
+    public void showComment( final int _location ) {
         int size = mComments.size();
         if( mCommentView != null && size > 0 && _location >= 0 ) {
             final TextView tv = (TextView) mCommentView.findViewById( R.id.ll_gallery_comment );
@@ -664,11 +669,12 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
                         tv.setText( mComments.get( _location ) );
                     }
                 } );
+                mCommentView.setVisibility( View.VISIBLE );
             }
             else {
-                tv.setText( "..." );
+                mCommentView.setVisibility( View.INVISIBLE );
             }
-        }
+        } 
     }
 
     /**
@@ -696,5 +702,10 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
             }
         }
         mCommentView.setLayoutParams( params );
+    }
+ 
+    @Override
+    public View getCommentsView() {
+        return mCommentView;
     }
 }

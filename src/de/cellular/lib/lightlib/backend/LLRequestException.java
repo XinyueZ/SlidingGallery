@@ -15,8 +15,6 @@
  */
 package de.cellular.lib.lightlib.backend;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
 
 @SuppressWarnings("serial")
 public class LLRequestException extends Exception {
@@ -29,19 +27,7 @@ public class LLRequestException extends Exception {
         mExp = _e;
         mUrlStr = _urlStr;
     }
- 
-    protected LLRequestException( String _detailMessage, Throwable _throwable ) {
-        super( _detailMessage, _throwable );
-    }
-
-    protected LLRequestException( String _detailMessage ) {
-        super( _detailMessage );
-    }
-
-    protected LLRequestException( Throwable _throwable ) {
-        super( _throwable );
-    }
-
+  
     /**
      * @return the tag
      */
@@ -72,109 +58,13 @@ public class LLRequestException extends Exception {
         mUrlStr = _urlStr;
     }
 
-    /**
-     * @param _o
-     * @return
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    public boolean equals( Object _o ) {
-        return mExp.equals( _o );
-    }
-
-    /**
-     * @return
-     * @see java.lang.Throwable#fillInStackTrace()
-     */
-    public Throwable fillInStackTrace() {
-        return mExp.fillInStackTrace();
-    }
-
-    /**
-     * @return
-     * @see java.lang.Throwable#getCause()
-     */
-    public Throwable getCause() {
-        return mExp.getCause();
-    }
-
-    /**
-     * @return
-     * @see java.lang.Throwable#getLocalizedMessage()
-     */
-    public String getLocalizedMessage() {
-        return mExp.getLocalizedMessage();
-    }
-
-    /**
-     * @return
-     * @see java.lang.Throwable#getMessage()
-     */
-    public String getMessage() {
-        return mExp.getMessage();
-    }
-
-    /**
-     * @return
-     * @see java.lang.Throwable#getStackTrace()
-     */
-    public StackTraceElement[] getStackTrace() {
-        return mExp.getStackTrace();
-    }
-
-    /**
-     * @return
-     * @see java.lang.Object#hashCode()
-     */
-    public int hashCode() {
-        return mExp.hashCode();
-    }
-
-    /**
-     * @param _throwable
-     * @return
-     * @see java.lang.Throwable#initCause(java.lang.Throwable)
-     */
-    public Throwable initCause( Throwable _throwable ) {
-        return mExp.initCause( _throwable );
-    }
-
-    /**
-     * 
-     * @see java.lang.Throwable#printStackTrace()
-     */
-    public void printStackTrace() {
-        mExp.printStackTrace();
-    }
-
-    /**
-     * @param _err
-     * @see java.lang.Throwable#printStackTrace(java.io.PrintStream)
-     */
-    public void printStackTrace( PrintStream _err ) {
-        mExp.printStackTrace( _err );
-    }
-
-    /**
-     * @param _err
-     * @see java.lang.Throwable#printStackTrace(java.io.PrintWriter)
-     */
-    public void printStackTrace( PrintWriter _err ) {
-        mExp.printStackTrace( _err );
-    }
-
-    /**
-     * @param _trace
-     * @see java.lang.Throwable#setStackTrace(java.lang.StackTraceElement[])
-     */
-    public void setStackTrace( StackTraceElement[] _trace ) {
-        mExp.setStackTrace( _trace );
-    }
-
-    /**
-     * @return
-     * @see java.lang.Throwable#toString()
-     */
+    @Override
     public String toString() {
-        return mExp.toString();
+        if( mExp != null ){
+            return mExp.toString();
+        }
+        else{
+            return "LLRequestException on " + getUrlStr();
+        }
     }
 }

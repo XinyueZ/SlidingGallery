@@ -57,7 +57,10 @@ import de.cellular.lib.lightlib.log.LLL;
  * <li>Data source should have equal width and height.</li>
  * <p>
  * 
- * @version <strong>1.0.1</strong> <li>Add</li>
+ * @version <strong>1.0.2</strong> <li>Downloaded images are available in listeners</li>
+ *          <p>
+ *          <strong>1.0.1</strong>
+ *          <li>Add</li>
  *          <p>
  *          {@link #appendImage(Bitmap, int)}
  *          <p>
@@ -154,9 +157,11 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
          * 
          * @param _location
          *            the position of major item.
+         * @param _bitmaps
+         *            the downloaded bitmaps
          * @since 1.0
          */
-        public void onItemClicked( int _location );
+        public void onItemClicked( int _location, List<Bitmap> _bitmaps );
     }
 
     /**
@@ -176,9 +181,11 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
          * 
          * @param _location
          *            the position of current item.
+         * @param _bitmaps
+         *            the downloaded bitmaps
          * @since 1.0
          */
-        public void onItemScroll( int _location );
+        public void onItemScroll( int _location, List<Bitmap> _bitmaps );
     }
 
     /**
@@ -198,9 +205,11 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
          * 
          * @param _location
          *            the position of the major item.
+         * @param _bitmaps
+         *            the downloaded bitmaps
          * @since 1.0
          */
-        public void onItemScrolled( int _location );
+        public void onItemScrolled( int _location, List<Bitmap> _bitmaps );
     }
 
     /**
@@ -240,7 +249,7 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
      */
     private void onItemClicked() {
         if( mOnItemClickListener != null && mCount > 0 ) {
-            mOnItemClickListener.onItemClicked( mCurrentPosition );
+            mOnItemClickListener.onItemClicked( mCurrentPosition, mBitmaps );
         }
     }
 
@@ -251,7 +260,7 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
      */
     private void onItemScroll() {
         if( mOnItemScrollListener != null ) {
-            mOnItemScrollListener.onItemScroll( mCurrentPosition );
+            mOnItemScrollListener.onItemScroll( mCurrentPosition, mBitmaps );
         }
     }
 
@@ -262,7 +271,7 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
      */
     private void onItemScrolled() {
         if( mOnItemScrolledListener != null ) {
-            mOnItemScrolledListener.onItemScrolled( mCurrentPosition );
+            mOnItemScrolledListener.onItemScrolled( mCurrentPosition, mBitmaps );
         }
     }
 

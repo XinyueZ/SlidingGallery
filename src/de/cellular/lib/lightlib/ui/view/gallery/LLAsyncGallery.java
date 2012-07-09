@@ -17,12 +17,13 @@ package de.cellular.lib.lightlib.ui.view.gallery;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import android.content.ComponentCallbacks;
 import android.content.res.Configuration;
@@ -30,6 +31,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.View;
 import de.cellular.lib.lightlib.backend.LLImageResponse;
 import de.cellular.lib.lightlib.backend.LLRequest;
 import de.cellular.lib.lightlib.backend.LLRequestException;
@@ -47,16 +49,34 @@ import de.cellular.lib.lightlib.ui.view.gallery.base.ILLGallery;
  * 
  * @see {@link http://en.wikipedia.org/wiki/Decorator_pattern}
  *      <p>
- *      Learn more about the Decorator pattern from GOF.
+ *      To know more about the Decorator pattern from GOF.
  * 
- * @version <strong>1.0</strong> <li>just a beginning</li>
+ * @version <strong>1.0.1</strong> <li>Added comments.</li>
+ *          <p>
+ *          Because a comment of a bitmap must be shown later(All bitmaps are loaded async in {@link #load(RequestedSize)}).
+ *          Here I introduce {@link CommentHelper} to store comments that are loaded later
+ *          <br>
+ *          and change {@link Queue} to {@link List} that stored {@link Uri}s, so that the {@link LLAsyncGallery} can get a correct comment for a loaded bitmap with an index.
+ *          <p>
+ * @see {@link #appendBitmapFromMessage(Message), knows that how a comment links to the correct bitmap.
+ *      <p>
+ *      <strong>1.0</strong>
+ *      <li>just a beginning</li>
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  * 
  */
 public class LLAsyncGallery extends LLRequestResponsibleObject implements ComponentCallbacks, ILLGallery {
     private volatile LLGallery     mGallery;
-    private Queue<Uri>             mUris             = new ConcurrentLinkedQueue<Uri>();
+    private List<Uri>              mUris             = new LinkedList<Uri>();
     private Map<String, LLRequest> mConsumedRequests = new HashMap<String, LLRequest>();
+
+    static class CommentHelper {
+        public int             commentViewId;
+        public CommentPosition commentPosition;
+        public List<String>    comments = new ArrayList<String>();
+    }
+
+    private final static CommentHelper sCommentHelper = new CommentHelper();
 
     /**
      * Instantiates a new {@link LLAsyncGallery}.
@@ -75,7 +95,7 @@ public class LLAsyncGallery extends LLRequestResponsibleObject implements Compon
      * @since 1.0
      * @return the uris
      */
-    public Queue<Uri> getUris() {
+    public List<Uri> getUris() {
         return mUris;
     }
 
@@ -155,8 +175,7 @@ public class LLAsyncGallery extends LLRequestResponsibleObject implements Compon
      *            the size of that will be requested.
      */
     private void load( RequestedSize _reqSize ) {
-        Uri uri = null;
-        while( (uri = mUris.poll()) != null ) {
+        for( Uri uri : mUris ) {
             request( uri.toString(), _reqSize );
         }
     }
@@ -219,7 +238,16 @@ public class LLAsyncGallery extends LLRequestResponsibleObject implements Compon
         if( _msg.obj instanceof LLImageResponse ) {
             LLImageResponse response = (LLImageResponse) _msg.obj;
             synchronized( this ) {
-                mGallery.appendImage( response.getBitmap() );
+                this.appendImage( response.getBitmap() );
+                int i = 0;
+                for( Uri uri : mUris ) {
+                    if( TextUtils.equals( uri.toString(), response.getUrlStr() ) ) {
+                        this.appendComment( sCommentHelper.comments.get( i ) );
+                        this.showComment( i );
+                        break;
+                    }
+                    i++;
+                }
                 mConsumedRequests.put( response.getUrlStr(), null );
             }
         }
@@ -297,13 +325,23 @@ public class LLAsyncGallery extends LLRequestResponsibleObject implements Compon
 
     @Override
     public void addComments( int _commentViewId, String[] _comments ) {
-        mGallery.addComments( _commentViewId, _comments );
+        // mGallery.addComments( _commentViewId, _comments );
+        this.addComments( _commentViewId, CommentPosition.BOTTOM, _comments );
     }
 
     @Override
     public void addComments( int _commentViewId, CommentPosition _pos, String[] _comments ) {
-        mGallery.addComments( _commentViewId, _pos, _comments );
+        mGallery.addComments( _commentViewId, _pos, null );
+        mGallery.getCommentsView().setVisibility( View.INVISIBLE );
+        sCommentHelper.commentViewId = _commentViewId;
+        sCommentHelper.commentPosition = _pos;
+        sCommentHelper.comments.addAll( Arrays.asList( _comments ) );
     }
+
+    @Override
+    public void showComment( int _location ) {
+        mGallery.showComment( _location );
+    };
 
     @Override
     public void setOnItemClickListener( OnItemClickListener _listener ) {
@@ -318,5 +356,10 @@ public class LLAsyncGallery extends LLRequestResponsibleObject implements Compon
     @Override
     public void setOnItemScrolledListener( OnItemScrolledListener _listener ) {
         mGallery.setOnItemScrolledListener( _listener );
+    }
+ 
+    @Override
+    public View getCommentsView() { 
+        return mGallery.getCommentsView();
     }
 }

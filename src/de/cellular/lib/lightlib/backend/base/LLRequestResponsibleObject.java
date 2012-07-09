@@ -16,6 +16,7 @@
 package de.cellular.lib.lightlib.backend.base;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import de.cellular.lib.lightlib.backend.LLRequest;
 import de.cellular.lib.lightlib.backend.LLRequestImage;
@@ -30,10 +31,36 @@ import de.cellular.lib.lightlib.ui.view.gallery.LLAsyncGallery;
  * <p>
  * {@link LLAsyncGallery}
  * 
+ * @see {@link http://en.wikipedia.org/wiki/Decorator_pattern}
+ *      <p>
+ *      To know more about the Decorator pattern from GOF.
+ *      
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  * 
  */
 public abstract class LLRequestResponsibleObject extends Handler implements ILLRequestResponsible {
+    private ILLRequestResponsible mDeleget;
+
+    public LLRequestResponsibleObject() {
+        super();
+    }
+
+    public LLRequestResponsibleObject( Callback _callback ) {
+        super( _callback );
+    }
+
+    public LLRequestResponsibleObject( Looper _looper, Callback _callback ) {
+        super( _looper, _callback );
+    }
+
+    public LLRequestResponsibleObject( Looper _looper ) {
+        super( _looper );
+    }
+
+    public LLRequestResponsibleObject( ILLRequestResponsible _deleget ) {
+        super();
+        mDeleget = _deleget;
+    }
 
     @Override
     public void handleMessage( Message _msg ) {
@@ -42,18 +69,28 @@ public abstract class LLRequestResponsibleObject extends Handler implements ILLR
         {
             case LLRequest.REQUEST_FAILED:
                 onRequestFailed( _msg );
+                if( mDeleget != null )
+                    mDeleget.onRequestFailed( _msg );
             break;
             case LLRequest.REQUEST_SUCCESSED:
                 onRequestSuccessed( _msg );
+                if( mDeleget != null )
+                    mDeleget.onRequestSuccessed( _msg );
             break;
             case LLRequest.REQUEST_ABORTED:
                 onRequestAborted( _msg );
+                if( mDeleget != null )
+                    mDeleget.onRequestAborted( _msg );
             break;
             case LLRequestImage.REQUEST_IMAGE_SUCCESSED:
                 onRequestImageSuccessed( _msg );
+                if( mDeleget != null )
+                    mDeleget.onRequestImageSuccessed( _msg );
             break;
             case LLRequestImage.REQUEST_IMAGE_FAILED:
                 onRequestImageFailed( _msg );
+                if( mDeleget != null )
+                    mDeleget.onRequestImageFailed( _msg );
             break;
             default:
                 LLL.i( ":| Unkown event." );
@@ -61,6 +98,8 @@ public abstract class LLRequestResponsibleObject extends Handler implements ILLR
         }
 
         onRequestFinished( _msg );
+        if( mDeleget != null )
+            mDeleget.onRequestFinished( _msg );
 
     }
 

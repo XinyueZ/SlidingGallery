@@ -30,67 +30,99 @@ import de.cellular.lib.lightlib.ui.view.gallery.LLAsyncGallery;
  * <strong>Known subclasses are</strong>
  * <p>
  * {@link LLAsyncGallery}
+ * <p>
+ * {@link LLRequestResponsibleSimpleObject}<br>
+ * (A convenient way with which the client decorates a {@link ILLRequestResponsible} object. )
  * 
  * @see {@link http://en.wikipedia.org/wiki/Decorator_pattern}
  *      <p>
  *      To know more about the Decorator pattern from GOF.
- *      
+ * 
+ * @version 1.0
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  * 
  */
 public abstract class LLRequestResponsibleObject extends Handler implements ILLRequestResponsible {
     private ILLRequestResponsible mDeleget;
 
+    /**
+     * Instantiates a new LLRequestResponsibleObject.
+     * 
+     * @since 1.0
+     */
     public LLRequestResponsibleObject() {
         super();
     }
 
-    public LLRequestResponsibleObject( Callback _callback ) {
-        super( _callback );
-    }
-
-    public LLRequestResponsibleObject( Looper _looper, Callback _callback ) {
-        super( _looper, _callback );
-    }
-
-    public LLRequestResponsibleObject( Looper _looper ) {
-        super( _looper );
-    }
-
+    /**
+     * Decorates an ILLRequestResponsible object, it could be a UI like an Activity, Fragment, or non-UI things.
+     * 
+     * @param _deleget
+     *            the ILLRequestResponsible implementing object.
+     * @since 1.0
+     */
     public LLRequestResponsibleObject( ILLRequestResponsible _deleget ) {
         super();
         mDeleget = _deleget;
     }
 
+    /**
+     * @deprecated Instantiates a new lL request responsible object.
+     * @since 1.0
+     */
+    protected LLRequestResponsibleObject( Callback _callback ) {
+        super( _callback );
+    }
+
+    /**
+     * @deprecated Instantiates a new lL request responsible object.
+     * @since 1.0
+     */
+    protected LLRequestResponsibleObject( Looper _looper, Callback _callback ) {
+        super( _looper, _callback );
+    }
+
+    /**
+     * @deprecated Instantiates a new lL request responsible object.
+     * @since 1.0
+     */
+    protected LLRequestResponsibleObject( Looper _looper ) {
+        super( _looper );
+    }
+
     @Override
     public void handleMessage( Message _msg ) {
-
         switch( _msg.what )
         {
             case LLRequest.REQUEST_FAILED:
                 onRequestFailed( _msg );
-                if( mDeleget != null )
+                if( mDeleget != null ) {
                     mDeleget.onRequestFailed( _msg );
+                }
             break;
             case LLRequest.REQUEST_SUCCESSED:
                 onRequestSuccessed( _msg );
-                if( mDeleget != null )
+                if( mDeleget != null ) {
                     mDeleget.onRequestSuccessed( _msg );
+                }
             break;
             case LLRequest.REQUEST_ABORTED:
                 onRequestAborted( _msg );
-                if( mDeleget != null )
+                if( mDeleget != null ) {
                     mDeleget.onRequestAborted( _msg );
+                }
             break;
             case LLRequestImage.REQUEST_IMAGE_SUCCESSED:
                 onRequestImageSuccessed( _msg );
-                if( mDeleget != null )
+                if( mDeleget != null ) {
                     mDeleget.onRequestImageSuccessed( _msg );
+                }
             break;
             case LLRequestImage.REQUEST_IMAGE_FAILED:
                 onRequestImageFailed( _msg );
-                if( mDeleget != null )
+                if( mDeleget != null ) {
                     mDeleget.onRequestImageFailed( _msg );
+                }
             break;
             default:
                 LLL.i( ":| Unkown event." );
@@ -98,9 +130,9 @@ public abstract class LLRequestResponsibleObject extends Handler implements ILLR
         }
 
         onRequestFinished( _msg );
-        if( mDeleget != null )
+        if( mDeleget != null ) {
             mDeleget.onRequestFinished( _msg );
-
+        }
     }
 
     @Override

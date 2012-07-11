@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -48,6 +47,9 @@ import de.cellular.lib.lightlib.utils.UIUtils;
  * <li>Data source should have equal width and height.</li>
  * <p>
  * 
+ * @version <strong>1.0.4</strong>
+ *          <p>
+ *          <li>Fixed bug that the gallary can not be installed on fragment.</li>
  * @version <strong>1.0.3</strong>
  *          <p>
  *          <li>Pass downloaded bitmaps to client are available in listeners</li>
@@ -659,22 +661,21 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
     @Override
     public void showComment( final int _location ) {
         int size = mComments.size();
-        if( mCommentView != null && size > 0 && _location >= 0 ) {
+        if( mCommentView != null && size > 0 && (_location >= 0 && _location < size) ) {
             final TextView tv = (TextView) mCommentView.findViewById( R.id.ll_gallery_comment );
             if( !TextUtils.isEmpty( mComments.get( _location ) ) ) {
-                Activity activity = (Activity) getContext();
-                activity.runOnUiThread( new Runnable() {
-                    @Override
-                    public void run() {
-                        tv.setText( mComments.get( _location ) );
-                    }
-                } );
+                // post( new Runnable() {
+                // @Override
+                // public void run() {
+                tv.setText( mComments.get( _location ) );
+                // }
+                // } );
                 mCommentView.setVisibility( View.VISIBLE );
             }
             else {
                 mCommentView.setVisibility( View.INVISIBLE );
             }
-        } 
+        }
     }
 
     /**
@@ -703,7 +704,7 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
         }
         mCommentView.setLayoutParams( params );
     }
- 
+
     @Override
     public View getCommentsView() {
         return mCommentView;

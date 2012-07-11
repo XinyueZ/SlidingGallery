@@ -15,6 +15,7 @@
  */
 package de.cellular.lib.lightlib.backend.base;
 
+import de.cellular.lib.lightlib.backend.LLRequest;
 import de.cellular.lib.lightlib.ui.fragment.LLRequestingFragment;
 import android.os.Message;
 
@@ -28,19 +29,57 @@ import android.os.Message;
  * <p>
  * {@link LLRequestResponsibleObject}
  * 
+ * @version 1.0
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  * 
  */
 public interface ILLRequestResponsible {
+    
+    /**
+     * Handler on request finished.
+     *
+     * @param _msg the {@link Message} sent from {@link LLRequest}s.
+     * @since 1.0
+     */
     void onRequestFinished( Message _msg );
 
+    /**
+     * Handler on request image failed.
+     *
+     * @param _msg the {@link Message} sent from {@link LLRequest}s.
+     * @since 1.0
+     */
     void onRequestImageFailed( Message _msg );
 
+    /**
+     * Handler on request image successfully.
+     *
+     * @param _msg the {@link Message} sent from {@link LLRequest}s.
+     * @since 1.0
+     */
     void onRequestImageSuccessed( Message _msg );
 
+    /**
+     * Handler on request being aborted.
+     *
+     * @param _msg the {@link Message} sent from {@link LLRequest}s.
+     * @since 1.0
+     */
     void onRequestAborted( Message _msg );
 
+    /**
+     * Handler on request is successfully.
+     *
+     * @param _msg the {@link Message} sent from {@link LLRequest}s.
+     * @since 1.0
+     */
     void onRequestSuccessed( Message _msg );
 
+    /**
+     * Handler on request being failed.
+     *
+     * @param _msg the {@link Message} sent from {@link LLRequest}s.
+     * @since 1.0
+     */
     void onRequestFailed( Message _msg );
 }

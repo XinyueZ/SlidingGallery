@@ -22,8 +22,8 @@ import java.io.IOException;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Handler;
 import android.os.Message;
+import de.cellular.lib.lightlib.backend.base.LLRequestResponsibleObject;
 import de.cellular.lib.lightlib.log.LLL;
 import de.cellular.lib.lightlib.utils.UIUtils;
 
@@ -44,7 +44,7 @@ public class LLRequestImage extends LLRequestFile
 
     private RequestedSize mReqSize;
 
-    private LLRequestImage( Context _context, Handler _handler, Method _method, RequestedSize _reqSize ) {
+    private LLRequestImage( Context _context, LLRequestResponsibleObject _handler, Method _method, RequestedSize _reqSize ) {
         super( _context, _handler, _method );
         mReqSize = _reqSize;
     }
@@ -56,7 +56,7 @@ public class LLRequestImage extends LLRequestFile
             readStreamToBitmap( ret );
             LLL.i( ":) Reading Bitmap successfully." );
 
-            super.onResponse( REQUEST_IMAGE_SUCCESSED, ret );
+            finishResponse( REQUEST_IMAGE_SUCCESSED, ret );
         }
         catch( Exception _e )
         {
@@ -156,7 +156,7 @@ public class LLRequestImage extends LLRequestFile
 
     public static LLRequestImage start(
             Context _context,
-            Handler _handler,
+            LLRequestResponsibleObject _handler,
             Method _method,
             String _url,
             RequestedSize _reqSize,

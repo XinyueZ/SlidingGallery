@@ -20,16 +20,21 @@ import java.io.File;
 import java.io.IOException;
 
 import android.content.Context;
-import android.os.Handler;
-
+import de.cellular.lib.lightlib.backend.base.LLRequestResponsibleObject;
 import de.cellular.lib.lightlib.io.FileHelper;
+
 /**
+ * 
+ * <strong>Known subclasses are</strong>
+ * <p>
+ * {@link LLRequestImage}
+ * 
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
- *
+ * 
  */
 public class LLRequestFile extends LLRequest {
 
-    public LLRequestFile( Context _context, Handler _handler, Method _method ) {
+    public LLRequestFile( Context _context, LLRequestResponsibleObject _handler, Method _method ) {
         super( _context, _handler, _method );
     }
 

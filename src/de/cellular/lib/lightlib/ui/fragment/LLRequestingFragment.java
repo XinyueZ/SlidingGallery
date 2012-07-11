@@ -19,7 +19,6 @@ package de.cellular.lib.lightlib.ui.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler.Callback;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
@@ -31,8 +30,6 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
-import de.cellular.lib.lightlib.backend.LLRequest;
-import de.cellular.lib.lightlib.backend.LLRequestImage;
 import de.cellular.lib.lightlib.backend.base.ILLRequestResponsible;
 import de.cellular.lib.lightlib.log.LLL;
 import de.cellular.lib.lightlib.ui.anim.Rotate3dAnimation;
@@ -41,7 +38,7 @@ import de.cellular.lib.lightlib.ui.anim.Rotate3dAnimation;
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  * 
  */
-public abstract class LLRequestingFragment extends Fragment implements Callback, ILLRequestResponsible
+public abstract class LLRequestingFragment extends Fragment implements ILLRequestResponsible
 {
     private static long FLIP_ANIMATION_DURATION_IN  = 300;
     private static long FLIP_ANIMATION_DURATION_OUT = 300;
@@ -105,7 +102,7 @@ public abstract class LLRequestingFragment extends Fragment implements Callback,
         super.onStart();
         LLL.d( getClass().getSimpleName() + "::onStart" );
 
-        startRotate3dAnimationIn();
+//        startRotate3dAnimationIn();
     }
 
     @Override
@@ -113,7 +110,7 @@ public abstract class LLRequestingFragment extends Fragment implements Callback,
         super.onStop();
         LLL.d( getClass().getSimpleName() + "::onStop" );
 
-        startRotate3dAnimationOut();
+//        startRotate3dAnimationOut();
     }
 
     @Override
@@ -140,42 +137,7 @@ public abstract class LLRequestingFragment extends Fragment implements Callback,
         LLL.d( getClass().getSimpleName() + "::onDetach" );
     }
 
-    // -------------------------------------------------------
-    // Callbacks for network requests
-    // -------------------------------------------------------
-
-    @Override
-    public boolean handleMessage( Message _msg ) {
-        try {
-            switch( _msg.what )
-            {
-                case LLRequest.REQUEST_FAILED:
-                    onRequestFailed( _msg );
-                break;
-                case LLRequest.REQUEST_SUCCESSED:
-                    onRequestSuccessed( _msg );
-                break;
-                case LLRequest.REQUEST_ABORTED:
-                    onRequestAborted( _msg );
-                break;
-                case LLRequestImage.REQUEST_IMAGE_SUCCESSED:
-                    onRequestImageSuccessed( _msg );
-                break;
-                case LLRequestImage.REQUEST_IMAGE_FAILED:
-                    onRequestImageFailed( _msg );
-                break;
-                default:
-                    LLL.i( ":| Unkown event." );
-                break;
-            }
-
-            onRequestFinished( _msg );
-            return true;
-        }
-        catch( Exception _e ) {
-            return false;
-        }
-    }
+    
 
     @Override
     public abstract void onRequestFinished( Message _msg );

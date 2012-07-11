@@ -18,18 +18,8 @@ package de.cellular.lib.lightlib.backend;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.security.KeyManagementException;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.List;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -54,27 +44,53 @@ import org.apache.http.protocol.HTTP;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.webkit.WebView;
-
+import de.cellular.lib.lightlib.backend.base.LLRequestResponsibleObject;
 import de.cellular.lib.lightlib.log.LLL;
+
 /**
+ * The abortable request object based on HttpClient. <br>
+ * Corresponding with a {@link LLRequestResponsibleObject} object.
+ * 
+ * <p>
+ * <strong>Known subclasses are</strong>
+ * <p>
+ * {@link LLRequestFile}
+ * 
+ * @version 1.0
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
- *
+ * 
  */
 public class LLRequest extends AsyncTask<Object, Object, Exception>
 {
-    private HttpRequestBase    mHttpRequestBase;
+    private HttpRequestBase              mHttpRequestBase;
 
-    protected static final int TIME_OUT = 15 * 1000;
-    protected String           mUserAgent;
-    protected Handler          mHandler;
-    protected Context          mContext;
+    protected static final int           TIME_OUT = 15 * 1000;
+    protected String                     mUserAgent;
+    protected LLRequestResponsibleObject mHandler;
+    protected Context                    mContext;
 
-    public enum Method {
+    /**
+     * The Method for Request Mode.
+     * 
+     * @since 1.0
+     */
+    public enum Method
+    {
+        /**
+         * HTTP-GET mode.
+         * 
+         * @since 1.0
+         */
         GET,
+
+        /**
+         * HTTP-POST mode. You can override {@link #onWritePostBody}
+         * 
+         * @since 1.0
+         */
         POST,
     }
 
@@ -83,7 +99,19 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
     public static final int REQUEST_SUCCESSED = 0x35;
     public static final int REQUEST_ABORTED   = 0x36;
 
-    protected LLRequest( Context _context, Handler _handler, Method _method )
+    /**
+     * Instantiates a new lL request.
+     * 
+     * @since 1.0
+     * 
+     * @param _context
+     *            the Context
+     * @param _handler
+     *            the {@link LLRequestResponsibleObject} object that can response to the request.
+     * @param _method
+     *            the request {@link Method}.
+     */
+    protected LLRequest( Context _context, LLRequestResponsibleObject _handler, Method _method )
     {
         mUserAgent = new WebView( _context ).getSettings().getUserAgentString();
         mHandler = _handler;
@@ -91,33 +119,29 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
         mContext = _context;
     }
 
-    static class MySSLSocketFactory extends SSLSocketFactory {
-        SSLContext sslContext = SSLContext.getInstance( "TLS" );
-
-        public MySSLSocketFactory( KeyStore truststore ) throws NoSuchAlgorithmException, KeyManagementException,
-                KeyStoreException, UnrecoverableKeyException {
-            super( truststore );
-
-            TrustManager tm = new X509TrustManager() {
-                public void checkClientTrusted( X509Certificate[] chain, String authType ) throws CertificateException {
-                }
-
-                public void checkServerTrusted( X509Certificate[] chain, String authType ) throws CertificateException {
-                }
-
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
-                }
-            };
-            sslContext.init( null, new TrustManager[] { tm }, null );
-        }
-    }
-
+    /**
+     * Creates a {@link DefaultHttpClient} object.
+     * 
+     * @since 1.0
+     * @param _ALLOW_ALL_HOSTNAME_VERIFIER_FOR_SSL
+     *            true allow all hostname verifier for ssl.
+     * @return the {@link DefaultHttpClient} object
+     */
     public static DefaultHttpClient createHttpClient( boolean _ALLOW_ALL_HOSTNAME_VERIFIER_FOR_SSL ) {
         return createHttpClient( null, _ALLOW_ALL_HOSTNAME_VERIFIER_FOR_SSL );
     }
 
-    private static DefaultHttpClient createHttpClient( CredentialsProvider _credsProvider,
+    /**
+     * Creates a {@link DefaultHttpClient} object.
+     * 
+     * @since 1.0
+     * @param _credsProvider
+     *            the object contains connect credential info like: User, Pwd, Host etc.
+     * @param _ALLOW_ALL_HOSTNAME_VERIFIER_FOR_SSL
+     *            true allow all hostname verifier for ssl.
+     * @return the {@link DefaultHttpClient} object
+     */
+    public static DefaultHttpClient createHttpClient( CredentialsProvider _credsProvider,
             boolean _ALLOW_ALL_HOSTNAME_VERIFIER_FOR_SSL )
     {
         // -------------------------------------------------------------------
@@ -168,7 +192,14 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
         return httpclient;
     }
 
-    private HttpRequestBase createHttpRequestBase( String _urlStr ) {
+    /**
+     * Creates the {@link HttpRequestBase} object.
+     * 
+     * @param _urlStr
+     *            the url of target in {@link String}
+     * @return the {@link HttpRequestBase}, it could be GET oder POST.
+     */
+    private HttpRequestBase createHttpRequest( String _urlStr ) {
         switch( mMethod )
         {
             case GET:
@@ -203,20 +234,30 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
                 String urlstr = (String) _params[1];
                 if( !TextUtils.isEmpty( urlstr ) ) {
                     LLL.i( ":| Request: " + urlstr );
-                    mHttpRequestBase = createHttpRequestBase( urlstr );
+                    mHttpRequestBase = createHttpRequest( urlstr );
 
                     // ----------------------------------------
                     // Set header
                     // ----------------------------------------
-
-                    if( !TextUtils.isEmpty( mUserAgent ) ) {
-                        mHttpRequestBase.setHeader( "User-Agent", mUserAgent );
-                    }
-                    String someCookies = (String) _params[2];
-                    if( !TextUtils.isEmpty( someCookies ) ) {
-                        mHttpRequestBase.setHeader( "Cookie", someCookies );
-                    }
                     onAppendHeaders( mHttpRequestBase );
+
+                    // ----------------------------------------
+                    // Set cookies
+                    // ----------------------------------------
+
+                    StringBuilder cookies = new StringBuilder();
+                    String onCookies = onWriteCookies();
+                    String someCookies = (String) _params[2];
+                    if( !TextUtils.isEmpty( onCookies ) ) {
+                        cookies.append( onCookies );
+                    }
+                    if( !TextUtils.isEmpty( someCookies ) ) {
+                        cookies.append( someCookies );
+                    }
+                    String cookiesStr = cookies.toString();
+                    if( !TextUtils.isEmpty( cookiesStr ) ) {
+                        mHttpRequestBase.setHeader( "Cookie", cookiesStr );
+                    }
 
                     // ----------------------------------------
                     // Set body
@@ -236,6 +277,10 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
                             LLL.d( ":| Empty body on HTTP-POST" );
                         }
                     }
+
+                    // ----------------------------------------
+                    // Do request
+                    // ----------------------------------------
 
                     try {
                         HttpResponse response = client.execute( mHttpRequestBase );
@@ -266,6 +311,16 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
         return ret;
     }
 
+    /**
+     * Handler when an empty response comes. The fellow codes show when the handler will be triggered(see {@link #doInBackground(Object... )}).
+     * <p>
+     * if( (mHttpRequestBase != null && mHttpRequestBase.isAborted()) || mHttpRequestBase == null )
+     * 
+     * @param _r
+     *            the {@link LLBaseResponse} or a decorated subclass of it that contains information after requesting.
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     protected void onEmptyResponse( LLBaseResponse _r ) throws IOException {
         LLL.w( ":| " + getClass().getSimpleName() + " empty response." );
         // Free http's thing i.e stream and client.
@@ -273,11 +328,32 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
         _r.release();
     }
 
-    protected void onResponse( LLBaseResponse _r ) throws IOException { 
-        onResponse( REQUEST_SUCCESSED, _r ); 
+    /**
+     * Default handler for responding request. <br>
+     * In the default implementation the {@link #finishResponse(int, LLBaseResponse)} is called that means the client can do super.onResponse(_r) when non-special message(just a {@link #REQUEST_SUCCESSED}) will be sent to the client. If a subclass of
+     * {@link LLResponse} like {@link LLImageResponse} sends a message specifies to it i.e {@link LLImageResponse}, then the {@link #finishResponse(int, LLBaseResponse)} must be called.
+     * 
+     * @param _r
+     *            the {@link LLBaseResponse} or a decorated subclass of it that contains information after requesting.
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    protected void onResponse( LLBaseResponse _r ) throws IOException {
+        finishResponse( REQUEST_SUCCESSED, _r );
     }
 
-    protected void onResponse( int _msg, LLBaseResponse _r ) throws IOException {
+    /**
+     * Finish response by freeing resource and sending message to the client <br>
+     * This method can(must) be called after overriding {@link #onResponse(LLBaseResponse)}.
+     * 
+     * @param _msg
+     *            the message that will be sent through {@link #mHandler}
+     * @param _r
+     *            the {@link LLBaseResponse} or a decorated subclass of it that contains information after requesting.
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    protected void finishResponse( int _msg, LLBaseResponse _r ) throws IOException {
         LLL.i( ":) " + getClass().getSimpleName() + " is successfully." );
         if( mHandler != null ) {
             Message msg = Message.obtain( mHandler, _msg, _r );
@@ -298,10 +374,33 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
         }
     }
 
+    /**
+     * Handler when append to write some cookies in subclass.
+     * 
+     * @return the cookie in string.
+     */
+    protected String onWriteCookies() {
+        return null;
+    }
+
+    /**
+     * Handler when some headers will be added on to request. The default version should be called to tell the backend server that the client is Android.
+     * 
+     * @param _req
+     *            the {@link HttpRequestBase} object
+     */
     protected void onAppendHeaders( HttpRequestBase _req ) {
+        if( !TextUtils.isEmpty( mUserAgent ) ) {
+            _req.setHeader( "User-Agent", mUserAgent );
+        }
         _req.setHeader( "Accept-Encoding", "gzip" );
     }
 
+    /**
+     * Handler when a POST request need body.
+     *
+     * @return the {@link List} that are written in request body.
+     */
     protected List<NameValuePair> onWritePostBody() {
         // List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         // _nameValuePairs.add(new BasicNameValuePair("id", "12345"));
@@ -309,9 +408,19 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
         return null;
     }
 
+    /**
+     * Wrap "new" a {@link LLRequest} object
+     *
+     * @param _context the Context
+     * @param _handler the {@link LLRequestResponsibleObject} object
+     * @param _method the request {@link Method}
+     * @param _url the target url in {@link String}
+     * @param _someCookies the cookies in {@link String}
+     * @return the created {@link LLRequest} object.
+     */
     public static LLRequest start(
             Context _context,
-            Handler _handler,
+            LLRequestResponsibleObject _handler,
             Method _method,
             String _url,
             String _someCookies ) {
@@ -320,6 +429,9 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
         return r;
     }
 
+    /**
+     * Abort the request.
+     */
     public void abort() {
         if( mHttpRequestBase != null && !mHttpRequestBase.isAborted() ) {
             mHttpRequestBase.abort();

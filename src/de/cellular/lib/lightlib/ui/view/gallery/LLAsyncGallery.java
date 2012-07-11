@@ -50,7 +50,9 @@ import de.cellular.lib.lightlib.ui.view.gallery.base.ILLGallery;
  * @see {@link http://en.wikipedia.org/wiki/Decorator_pattern}
  *      <p>
  *      To know more about the Decorator pattern from GOF.
- * 
+ *      
+ * @version <strong>1.0.2</strong> <li>Fixed bug that the comment can't be shown with correct index and be shown lazily.</li>
+ *   
  * @version <strong>1.0.1</strong> <li>Added comments.</li>
  *          <p>
  *          Because a comment of a bitmap must be shown later(All bitmaps are loaded async in {@link #load(RequestedSize)}).
@@ -65,7 +67,8 @@ import de.cellular.lib.lightlib.ui.view.gallery.base.ILLGallery;
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  * 
  */
-public class LLAsyncGallery extends LLRequestResponsibleObject implements ComponentCallbacks, ILLGallery {
+public class LLAsyncGallery extends LLRequestResponsibleObject implements ComponentCallbacks, ILLGallery 
+{
     private volatile LLGallery     mGallery;
     private List<Uri>              mUris             = new LinkedList<Uri>();
     private Map<String, LLRequest> mConsumedRequests = new HashMap<String, LLRequest>();
@@ -242,8 +245,10 @@ public class LLAsyncGallery extends LLRequestResponsibleObject implements Compon
                 int i = 0;
                 for( Uri uri : mUris ) {
                     if( TextUtils.equals( uri.toString(), response.getUrlStr() ) ) {
-                        this.appendComment( sCommentHelper.comments.get( i ) );
-                        this.showComment( i );
+                        mGallery.addComments(
+                                sCommentHelper.commentViewId,
+                                sCommentHelper.commentPosition,
+                                new String[] { sCommentHelper.comments.get( i ) } );
                         break;
                     }
                     i++;
@@ -331,8 +336,8 @@ public class LLAsyncGallery extends LLRequestResponsibleObject implements Compon
 
     @Override
     public void addComments( int _commentViewId, CommentPosition _pos, String[] _comments ) {
-        mGallery.addComments( _commentViewId, _pos, null );
-        mGallery.getCommentsView().setVisibility( View.INVISIBLE );
+        // mGallery.addComments( _commentViewId, _pos, null );
+        // mGallery.getCommentsView().setVisibility( View.GONE );
         sCommentHelper.commentViewId = _commentViewId;
         sCommentHelper.commentPosition = _pos;
         sCommentHelper.comments.addAll( Arrays.asList( _comments ) );
@@ -357,9 +362,9 @@ public class LLAsyncGallery extends LLRequestResponsibleObject implements Compon
     public void setOnItemScrolledListener( OnItemScrolledListener _listener ) {
         mGallery.setOnItemScrolledListener( _listener );
     }
- 
+
     @Override
-    public View getCommentsView() { 
+    public View getCommentsView() {
         return mGallery.getCommentsView();
     }
 }

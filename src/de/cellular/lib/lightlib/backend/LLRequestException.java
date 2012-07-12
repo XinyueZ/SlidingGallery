@@ -15,20 +15,37 @@
  */
 package de.cellular.lib.lightlib.backend;
 
-
+/**
+ * The Class LLRequestException.
+ * 
+ * @version 1.0
+ * @author Chris Xinyue Zhao <hasszhao@gmail.com>
+ */
 @SuppressWarnings("serial")
 public class LLRequestException extends Exception {
     private Exception mExp;
     private String    mUrlStr;
     private Object    mTag;
 
+    /**
+     * Instantiates a new {@link LLRequestException}.
+     * 
+     * @since 1.0
+     * @param _e
+     *            the original exception.
+     * @param _urlStr
+     *            the url in {@link String} of a request
+     */
     public LLRequestException( Exception _e, String _urlStr ) {
         super();
         mExp = _e;
         mUrlStr = _urlStr;
     }
-  
+
     /**
+     * Gets more info about this exception
+     * 
+     * @since 1.0
      * @return the tag
      */
     public Object getTag() {
@@ -36,14 +53,20 @@ public class LLRequestException extends Exception {
     }
 
     /**
+     * Sets more information(objects) that associates with this exception
+     * 
+     * @since 1.0
      * @param _tag
-     *            the tag to set
+     *            the info
      */
     public void setTag( Object _tag ) {
         mTag = _tag;
     }
 
     /**
+     * Gets url
+     * 
+     * @since 1.0
      * @return the url
      */
     public String getUrlStr() {
@@ -51,8 +74,11 @@ public class LLRequestException extends Exception {
     }
 
     /**
+     * Sets url
+     * 
+     * @since 1.0
      * @param _urlStr
-     *            the url to set
+     *            the url in {@link String} of a request
      */
     public void setUrlStr( String _urlStr ) {
         mUrlStr = _urlStr;
@@ -60,10 +86,10 @@ public class LLRequestException extends Exception {
 
     @Override
     public String toString() {
-        if( mExp != null ){
+        if( mExp != null ) {
             return mExp.toString();
         }
-        else{
+        else {
             return "LLRequestException on " + getUrlStr();
         }
     }

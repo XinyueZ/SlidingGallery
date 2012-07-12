@@ -25,9 +25,9 @@ import de.cellular.lib.lightlib.ui.view.gallery.LLGallery.CommentPosition;
 /**
  * Provides generic interface for a LLGallery.
  * 
+ * @version <strong>1.0.2 </strong> <li>Removed unused functions after changing {@link LLGallery} to 1.0.5</li>
  * @version <strong>1.0.1 </strong> <li>Add {@link #showComment}</li>
- *          <p>
- *          <strong> 1.0 </strong>
+ * @version <strong>1.0</strong>
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  * 
  */
@@ -38,6 +38,7 @@ public interface ILLGallery {
      * @return the view for comments
      */
     View getCommentsView();
+
     /**
      * Set item source.
      * <p>
@@ -49,20 +50,6 @@ public interface ILLGallery {
      * 
      */
     void setImages( List<Bitmap> _bitmaps );
-
-    /**
-     * Set item source.
-     * <p>
-     * <li>Not all data source will be shown. Because some items haven't been loaded yet(Internet, resource...etc).
-     * 
-     * @since 1.0
-     * @param _bitmaps
-     *            the data source
-     * @param _maxWidth
-     *            the max-width that each item can be shown.
-     * 
-     */
-    void setImages( List<Bitmap> _bitmaps, int _maxWidth );
 
     /**
      * Append an item
@@ -77,20 +64,6 @@ public interface ILLGallery {
     void appendImage( Bitmap _bmp );
 
     /**
-     * Append an item. Like {@link #setImages(List, int)} the {@link LLGallery} shows the item with associated _maxWidth.
-     * 
-     * @since 1.0
-     * @param _bmp
-     *            the data source
-     * @param _maxWidth
-     *            the max width
-     * @param _comment
-     *            the comment text
-     * 
-     */
-    void appendImage( Bitmap _bmp, int _maxWidth, String _comment );
-
-    /**
      * Append new comment
      * 
      * @since 1.0
@@ -99,21 +72,6 @@ public interface ILLGallery {
      * 
      */
     void appendComment( String _comment );
-
-    /**
-     * Set item source.
-     * <p>
-     * <li>Not all source will be shown. Because some items haven't been loaded yet(Internet, resource...etc).
-     * 
-     * @deprecated use {@link #setImages(List, int)} instead of it.
-     * @since 1.0
-     * @param _bitmaps
-     *            the data source
-     * @param _maxWidth
-     *            the max-width that each item can be shown.
-     * 
-     */
-    void setImagesByWidth( List<Bitmap> _bitmaps, int _maxWidth );
 
     /**
      * Add an array of comments to describe each item.

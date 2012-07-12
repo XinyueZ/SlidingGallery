@@ -37,7 +37,6 @@ import android.widget.TextView;
 import de.cellular.lib.lightlib.R;
 import de.cellular.lib.lightlib.log.LLL;
 import de.cellular.lib.lightlib.ui.view.gallery.base.ILLGallery;
-import de.cellular.lib.lightlib.utils.UIUtils;
 
 /**
  * A smooth gallery with an indicator, left-right button controlling, left-right arrow controlling, and comment text under or upon.
@@ -47,6 +46,9 @@ import de.cellular.lib.lightlib.utils.UIUtils;
  * <li>Data source should have equal width and height.</li>
  * <p>
  * 
+ * @version <strong>1.0.5</strong>
+ *          <p>
+ *          <li>Don't scale image again when images are passed into gallery, removed many unused functions.</li>
  * @version <strong>1.0.4</strong>
  *          <p>
  *          <li>Fixed bug that the gallary can not be installed on fragment.</li>
@@ -427,42 +429,8 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
         this( _context, _attrs );
     }
 
-    /**
-     * Scale bitmap
-     * <p>
-     * <li>Currently the view can only show the items whose height is larger than width.
-     * 
-     * @since 1.0
-     * 
-     * @param _bitmap
-     *            the image has width > height.
-     * @param _width
-     * @return the scaled bitmap
-     * 
-     */
-    private Bitmap scaleBitmap( Bitmap _bitmap, int _width )
-    {
-        if( _bitmap.getHeight() > _bitmap.getWidth() ) {
-            return UIUtils
-                    .scaleImageHW(
-                            _bitmap,
-                            _width );
-        }
-        else {
-            return UIUtils
-                    .scaleImageWH(
-                            _bitmap,
-                            _width );
-        }
-    }
-
     @Override
     public void setImages( List<Bitmap> _bitmaps ) {
-        setImages( _bitmaps, -1 );
-    }
-
-    @Override
-    public void setImages( List<Bitmap> _bitmaps, int _maxWidth ) {
         if( _bitmaps == null ) {
             LLL.e( "Image source is NULL." );
         }
@@ -475,42 +443,19 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
             // -------------------------------------------
             int lastWidth = 0;
             int lastHeight = 0;
-            int toWidth = _maxWidth >= 0 ? _maxWidth : getWidth();
             for( Bitmap bmp : _bitmaps ) {
                 if( bmp != null ) {
-                    Bitmap newBmp = scaleBitmap( bmp, toWidth );
-                    lastWidth = Math.max( lastWidth, newBmp.getWidth() );
-                    lastHeight = Math.max( lastHeight, newBmp.getHeight() );
-                    newBmps.add( newBmp );
+                    lastWidth = Math.max( lastWidth, bmp.getWidth() );
+                    lastHeight = Math.max( lastHeight, bmp.getHeight() );
+                    newBmps.add( bmp );
                 }
                 else {
                     mComments.add( null );
                 }
             }
 
-            setImages( newBmps, toWidth, lastHeight );
+            setImages( newBmps, lastWidth, lastHeight );
         }
-    }
-
-    @Override
-    public void appendImage( Bitmap _bmp ) {
-        if( _bmp != null ) {
-            Bitmap scaledBmp = scaleBitmap( _bmp, getWidth() );
-            appendImage( _bmp, scaledBmp.getWidth(), scaledBmp.getHeight() );
-        }
-    }
-
-    @Override
-    public void appendImage( Bitmap _bmp, int _maxWidth, String _comment ) {
-        if( _bmp != null ) {
-            Bitmap scaledBmp = scaleBitmap( _bmp, _maxWidth );
-            appendImage( _bmp, scaledBmp.getWidth(), scaledBmp.getHeight() );
-        }
-    }
-
-    @Override
-    public void appendComment( String _comment ) {
-        mComments.add( _comment );
     }
 
     /**
@@ -529,6 +474,18 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
     private void appendImage( Bitmap _bmp, int _toWidth, int _toHeight ) {
         changeThisViewLayoutAfterAddingItems( _toWidth, _toHeight );
         mSlideView.appendImage( _bmp, _toWidth );
+    }
+
+    @Override
+    public void appendImage( Bitmap _bmp ) {
+        if( _bmp != null ) {
+            appendImage( _bmp, _bmp.getWidth(), _bmp.getHeight() );
+        }
+    }
+
+    @Override
+    public void appendComment( String _comment ) {
+        mComments.add( _comment );
     }
 
     /**
@@ -572,35 +529,6 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
         // -------------------------------------------
         if( _bitmaps.size() > 0 ) {
             mSlideView.setImages( _bitmaps, _toWidth );
-        }
-    }
-
-    @Override
-    public void setImagesByWidth( List<Bitmap> _bitmaps, int _maxWidth ) {
-        if( _bitmaps == null ) {
-            LLL.e( "Image source is NULL." );
-        }
-        else {
-            List<Bitmap> newBmps = new ArrayList<Bitmap>();
-
-            // -------------------------------------------
-            // Resize layout to fill the bitmap of
-            // the max size.
-            // -------------------------------------------
-
-            int lastHeight = 0;
-            for( Bitmap bmp : _bitmaps ) {
-                if( bmp != null ) {
-                    Bitmap newBmp = scaleBitmap( bmp, _maxWidth );
-                    lastHeight = Math.max( lastHeight, newBmp.getHeight() );
-                    newBmps.add( newBmp );
-                }
-                else {
-                    mComments.add( null );
-                }
-            }
-
-            setImages( newBmps, _maxWidth, lastHeight );
         }
     }
 

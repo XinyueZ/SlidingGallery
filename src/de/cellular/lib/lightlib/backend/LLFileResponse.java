@@ -24,24 +24,41 @@ import java.util.Map;
 
 import org.apache.http.cookie.Cookie;
 
-import de.cellular.lib.lightlib.backend.LLBaseResponse;
-import de.cellular.lib.lightlib.backend.LLResponse;
-
 /**
- * @author Chris Xinyue Zhao <hasszhao@gmail.com>
+ * The Class LLFileResponse that decorates a {@link LLResponse}. Additional to {@link LLResponse} that it contains a ref to the downloaded file.
  * 
+ * @version 1.0
+ * @see {@link http://en.wikipedia.org/wiki/Decorator_pattern}
+ *      <p>
+ *      To know more about the Decorator pattern from GOF.
+ * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  */
 public class LLFileResponse extends LLResponse {
 
     private File           mOutput;
     private LLBaseResponse mBaseResponse;
 
+    /**
+     * Instantiates a new {@link LLFileResponse}.
+     * 
+     * @since 1.0
+     * @param _baseResponse
+     *            the response
+     * @param _file
+     *            the downloaded {@link File}
+     */
     public LLFileResponse( LLBaseResponse _baseResponse, File _file ) {
-        super( _baseResponse.getUrlStr() );
+        super();
         mBaseResponse = _baseResponse;
         mOutput = _file;
     }
 
+    /**
+     * Gets the downloaded {@link File}.
+     * 
+     * @since 1.0
+     * @return the downloaded file
+     */
     public File getOutputFile() {
         return mOutput;
     }
@@ -71,10 +88,12 @@ public class LLFileResponse extends LLResponse {
         return "Image-Response@" + getUrlStr();
     }
 
+    @Override
     public Map<String, Object> getTags() {
         return mBaseResponse.getTags();
     }
 
+    @Override
     public void setTag( String _key, Object _value ) {
         mBaseResponse.setTag( _key, _value );
     }

@@ -21,47 +21,126 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import de.cellular.lib.lightlib.log.LLL;
 
 /**
+ * A base class for all response which are returned by {@link LLRequest}. It is not an abstract class for empty response.
+ * 
+ * @see http://en.wikipedia.org/wiki/Null_object_pattern for more about "Null Object pattern".
+ * 
+ *      <strong>Known subclasses are</strong>
+ *      <p>
+ *      {@link LLResponse}
+ *      <p>
+ * @version 1.0
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
- *
+ * 
  */
-public class LLBaseResponse 
-{ 
-    private String            mUrlStr;
+public class LLBaseResponse
+{
+    protected DefaultHttpClient mClient;
+    protected HttpResponse      mResponse;
+    private String              mUrlStr;
     private Map<String, Object> mTags = new HashMap<String, Object>();
-    
-    public LLBaseResponse( String _urlStr ) {
-        super();
+
+    /**
+     * Instantiates a new {@link LLBaseResponse}.
+     * 
+     * @since 1.0
+     * @param _urlStr
+     *            the target url in {@link String}
+     * @param _client
+     *            the {@link DefaultHttpClient} with which we fired {@link LLRequest}.
+     * @param _response
+     *            the {@link HttpResponse} implementing object.
+     */
+    public LLBaseResponse( String _urlStr, DefaultHttpClient _client, HttpResponse _response ) {
         mUrlStr = _urlStr;
+        mClient = _client;
+        mResponse = _response;
     }
 
-    public void release() throws IOException { 
+    /**
+     * Instantiates a new {@link LLBaseResponse}. 
+     * @since 1.0
+     */
+    protected LLBaseResponse() {
     }
 
-    public List<Cookie> getCookies() { 
+    /**
+     * Release resource.
+     * 
+     * @since 1.0
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    public void release() throws IOException {
+        if( mClient != null ) {
+            mClient.getConnectionManager().shutdown();
+            mClient = null;
+        }
+
+        LLL.i( ":| <------" + getClass().getSimpleName() + " has been released ------>" );
+    }
+
+    /**
+     * Gets the cookies' list.
+     * 
+     * @since 1.0
+     * @return the cookies
+     */
+    public List<Cookie> getCookies() {
         return null;
     }
 
-    public InputStream getInputStream() { 
+    /**
+     * Gets the input stream.
+     * 
+     * @since 1.0
+     * @return the input stream
+     */
+    public InputStream getInputStream() {
         return null;
     }
 
-    public String getUrlStr() { 
+    /**
+     * Gets the target url in {@link String}.
+     * 
+     * @since 1.0
+     * @return the url str
+     */
+    public String getUrlStr() {
         return mUrlStr;
-    } 
-    
+    }
+
     @Override
     public String toString() {
-        return "Base-Response@" + mUrlStr;
+        return this.getClass().getSimpleName() + "@" + getUrlStr();
     }
 
-    
+    /**
+     * Gets the tags for more information from the response.
+     * 
+     * @since 1.0
+     * @return the key-value collection that contains info of response.
+     */
     public Map<String, Object> getTags() {
         return mTags;
     }
 
+    /**
+     * Sets more information on the response in the tag.
+     * 
+     * @since 1.0
+     * @param _key
+     *            the _key
+     * @param _value
+     *            the _value
+     */
     public void setTag( String _key, Object _value ) {
         mTags.put( _key, _value );
     }

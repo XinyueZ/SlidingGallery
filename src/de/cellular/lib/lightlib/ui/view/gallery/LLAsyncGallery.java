@@ -50,7 +50,7 @@ import de.cellular.lib.lightlib.ui.view.gallery.base.ILLGallery;
  * @see {@link http://en.wikipedia.org/wiki/Decorator_pattern}
  *      <p>
  *      To know more about the Decorator pattern from GOF.
- *      
+ * @version <strong>1.0.3 </strong> <li>Removed unused functions after changing {@link LLGallery} to 1.0.5</li>
  * @version <strong>1.0.2</strong> <li>Fixed bug that the comment can't be shown with correct index and be shown lazily.</li>
  *   
  * @version <strong>1.0.1</strong> <li>Added comments.</li>
@@ -67,7 +67,7 @@ import de.cellular.lib.lightlib.ui.view.gallery.base.ILLGallery;
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  * 
  */
-public class LLAsyncGallery extends LLRequestResponsibleObject implements ComponentCallbacks, ILLGallery 
+public class LLAsyncGallery extends LLRequestResponsibleObject implements ComponentCallbacks, ILLGallery
 {
     private volatile LLGallery     mGallery;
     private List<Uri>              mUris             = new LinkedList<Uri>();
@@ -304,28 +304,13 @@ public class LLAsyncGallery extends LLRequestResponsibleObject implements Compon
     }
 
     @Override
-    public void setImages( List<Bitmap> _bitmaps, int _maxWidth ) {
-        mGallery.setImages( _bitmaps, _maxWidth );
-    }
-
-    @Override
     public void appendImage( Bitmap _bmp ) {
         mGallery.appendImage( _bmp );
     }
 
     @Override
-    public void appendImage( Bitmap _bmp, int _maxWidth, String _comment ) {
-        mGallery.appendImage( _bmp, _maxWidth, _comment );
-    }
-
-    @Override
     public void appendComment( String _comment ) {
         mGallery.appendComment( _comment );
-    }
-
-    @Override
-    public void setImagesByWidth( List<Bitmap> _bitmaps, int _maxWidth ) {
-        mGallery.setImagesByWidth( _bitmaps, _maxWidth );
     }
 
     @Override

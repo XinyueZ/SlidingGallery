@@ -22,6 +22,7 @@ import java.io.IOException;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Message;
 import de.cellular.lib.lightlib.backend.base.LLRequestResponsibleObject;
 import de.cellular.lib.lightlib.log.LLL;
@@ -38,13 +39,18 @@ public class LLRequestImage extends LLRequestFile
 
     public static class RequestedSize
     {
-        public int reqWidth;
-        public int reqHeight;
+        public int reqWidth = -1;
+        public int reqHeight = -1;
+
+        public boolean isValid() {
+            return reqHeight > 0 && reqWidth > 0;
+        }
     }
 
     private RequestedSize mReqSize;
 
-    private LLRequestImage( Context _context, LLRequestResponsibleObject _handler, Method _method, RequestedSize _reqSize ) {
+    private LLRequestImage( Context _context, LLRequestResponsibleObject _handler, Method _method,
+            RequestedSize _reqSize ) {
         super( _context, _handler, _method );
         mReqSize = _reqSize;
     }
@@ -79,78 +85,59 @@ public class LLRequestImage extends LLRequestFile
     private void readStreamToBitmap( LLImageResponse _r ) throws IOException {
         if( _r.getInputStream() != null ) {
             Bitmap retBp = null;
+            String fname = System.currentTimeMillis() + "_" + Uri.parse( _r.getUrlStr() ).getLastPathSegment();
+            File tmpFile = createOutputFile( _r, fname );
             try {
-                retBp = BitmapFactory.decodeStream( _r.getInputStream() );
-                if( retBp == null ) {
-                    final BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inJustDecodeBounds = true;
-                    BitmapFactory.decodeStream( _r.getInputStream(), null, options );
-                    options.inSampleSize = calculateInSampleSize( options, mReqSize.reqWidth, mReqSize.reqHeight );
-                    options.inJustDecodeBounds = false;
-                    retBp = BitmapFactory.decodeStream( _r.getInputStream(), null, options );
-                    if( retBp != null ) {
-                        LLL.i( ":) Decoded stream with some options successfully." );
-                    }
-                    else {
-                        throw new Exception();
-                    }
+                final BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeFile( tmpFile.getAbsolutePath(), options );
+                options.inSampleSize = calculateInSampleSize( options, mReqSize ); 
+                options.inJustDecodeBounds = false;
+                retBp = BitmapFactory.decodeFile( tmpFile.getAbsolutePath(), options );
+                if( retBp != null ) {
+                    LLL.i( ":) Decoded file with some options successfully." );
+                }
+                else {
+                    throw new Exception();
                 }
             }
-            catch( Exception _e ) {
-                LLL.e( ":( Faild, try to download the object." );
-                String fname = System.currentTimeMillis() + ".tmp";
-                File tmpFile = createOutputFile( _r, fname );
-                try {
-                    retBp = BitmapFactory.decodeFile( tmpFile.getAbsolutePath() );
-                    if( retBp == null )   {
-                        final BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inJustDecodeBounds = true;
-                        BitmapFactory.decodeFile( tmpFile.getAbsolutePath(), options );
-                        options.inSampleSize = calculateInSampleSize( options, mReqSize.reqWidth,  mReqSize.reqHeight );
-                        options.inJustDecodeBounds = false;
-                        retBp = BitmapFactory.decodeFile( tmpFile.getAbsolutePath(), options );
-                        if( retBp != null ) {
-                            LLL.i( ":) Decoded file with some options successfully." );
-                        }
-                        else {
-                            throw new Exception();
-                        } 
-                    }
-                }
-                catch( Exception _ee ) {
-                    LLL.e( ":( Give up! The Bitmap can't be decoded definitly." );
-                }
-            } 
+            catch( Exception _ee ) {
+                LLL.e( ":( Give up! The Bitmap can't be decoded definitly." );
+            }
             // Scale the image and cache it.
             retBp = doScalingImage( retBp );
-            LLImageCache.setSendungImage( _r.getUrlStr(), retBp );
+//            LLImageCache.setSendungImage( _r.getUrlStr(), retBp );
             _r.setBitmap( retBp );
+            if( tmpFile.delete() ) {
+                LLL.i( "Del:" + fname );
+            }
+            else {
+                LLL.e( "Can't Del:" + fname );
+            }
         }
     }
 
     /**
      * Get new size of being produced bitmap
      * 
-     * @param options
-     * @param reqWidth
-     * @param reqHeight
+     * @param _options
+     * @param _reqSize
      * @see http://developer.android.com/intl/zh-CN/training/displaying-bitmaps/load-bitmap.html#load-bitmap
      * @return inSampleSize
      */
-    public static int calculateInSampleSize( BitmapFactory.Options options, int reqWidth, int reqHeight ) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
+    private static int calculateInSampleSize( BitmapFactory.Options _options, RequestedSize _reqSize ) {
         int inSampleSize = 1;
-
-        if( height > reqHeight || width > reqWidth ) {
-            if( width > height ) {
-                inSampleSize = Math.round( (float) height / (float) reqHeight );
+        LLL.d( "reqw=" + _reqSize.reqWidth + ",reqh=" + _reqSize.reqHeight + ",outw=" + _options.outWidth + ",outh="
+                + _options.outHeight );
+        if( _reqSize.isValid() && (_options.outHeight > _reqSize.reqHeight || _options.outWidth > _reqSize.reqWidth) ) {
+            if( _options.outWidth > _options.outHeight ) {
+                inSampleSize = Math.round( (float) _options.outHeight / (float) _reqSize.reqHeight );
             }
             else {
-                inSampleSize = Math.round( (float) width / (float) reqWidth );
+                inSampleSize = Math.round( (float) _options.outWidth / (float) _reqSize.reqWidth );
             }
         }
+        LLL.d( "inSampleSize=" + inSampleSize );
         return inSampleSize;
     }
 

@@ -24,20 +24,43 @@ import de.cellular.lib.lightlib.backend.base.LLRequestResponsibleObject;
 import de.cellular.lib.lightlib.io.FileHelper;
 
 /**
- * 
- * <strong>Known subclasses are</strong>
+ * A subclass of {@link LLRequest}. It reads stream of response and pull with stream as a file. <strong>Known subclasses are</strong>
  * <p>
  * {@link LLRequestImage}
  * 
+ * @version 1.0
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  * 
  */
 public class LLRequestFile extends LLRequest {
 
+    /**
+     * Instantiates a new {@link LLRequestFile}.
+     * 
+     * @since 1.0
+     * @param _context
+     *            the Context
+     * @param _handler
+     *            the handler the accept message while requesting.
+     * @param _method
+     *            the {@link Method} of requesting.
+     */
     public LLRequestFile( Context _context, LLRequestResponsibleObject _handler, Method _method ) {
         super( _context, _handler, _method );
     }
 
+    /**
+     * Creates the output file.
+     * 
+     * @since 1.0
+     * @param _r
+     *            the response after executing.
+     * @param _toFileName
+     *            the file name being saved.
+     * @return the saved file
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     protected File createOutputFile( LLBaseResponse _r, String _toFileName ) throws IOException {
         FileHelper fileHelper = new FileHelper( mContext );
         File file = new File( fileHelper.getTargetPath(), _toFileName );

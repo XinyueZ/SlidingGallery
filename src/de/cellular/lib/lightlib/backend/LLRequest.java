@@ -100,7 +100,7 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
     public static final int REQUEST_ABORTED   = 0x36;
 
     /**
-     * Instantiates a new lL request.
+     * Instantiates a new {@link LLRequest}.
      * 
      * @since 1.0
      * 
@@ -285,7 +285,7 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
                     try {
                         HttpResponse response = client.execute( mHttpRequestBase );
                         if( (mHttpRequestBase != null && mHttpRequestBase.isAborted()) || mHttpRequestBase == null ) {
-                            onEmptyResponse( new LLBaseResponse( urlstr ) );
+                            onEmptyResponse( new LLBaseResponse( urlstr, client, response ) );
                         }
                         else {
                             onResponse( LLResponse.createInstance( urlstr, client, response ) );
@@ -322,7 +322,7 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
      *             Signals that an I/O exception has occurred.
      */
     protected void onEmptyResponse( LLBaseResponse _r ) throws IOException {
-        LLL.w( ":| " + getClass().getSimpleName() + " empty response." );
+        LLL.i( ":| " + getClass().getSimpleName() + " empty response:" + _r.toString() );
         // Free http's thing i.e stream and client.
         // If error at releasing, the request seems falid as well.
         _r.release();
@@ -354,7 +354,7 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
      *             Signals that an I/O exception has occurred.
      */
     protected void finishResponse( int _msg, LLBaseResponse _r ) throws IOException {
-        LLL.i( ":) " + getClass().getSimpleName() + " is successfully." );
+        LLL.i( ":) " + getClass().getSimpleName() + " is successfully:" + _r.toString() );
         if( mHandler != null ) {
             Message msg = Message.obtain( mHandler, _msg, _r );
             msg.sendToTarget();

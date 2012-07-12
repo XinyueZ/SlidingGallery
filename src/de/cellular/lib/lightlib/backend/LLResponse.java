@@ -31,20 +31,46 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.text.TextUtils;
-
 import de.cellular.lib.lightlib.log.LLL;
+
 /**
+ * {@link LLResponse} encapsulates the necessary information for the corresponding {@link LLRequest}.
+ * <p>
+ * The class and it's subclasses can't be initialized. However they(exclude {@link LLResponse}) could be decorated with a {@link LLResponse} instance that is created after the {@link DefaultHttpClient} has finished execution.
+ * <p>
+ * <strong>Known subclasses are</strong>
+ * <p>
+ * {@link LLImageResponse}
+ * <p>
+ * {@link LLFileResponse}
+ * <p>
+ * 
+ * @version 1.0
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
- *
+ * 
  */
 public class LLResponse extends LLBaseResponse
 {
-    private DefaultHttpClient mClient;
-    private HttpResponse      mResponse;
-    private InputStream       mStream;
-    private List<Cookie>      mCookies;
-    private String            mCachedText;
+    private InputStream  mStream;
+    private List<Cookie> mCookies;
+    private String       mCachedText;
 
+    /**
+     * Creates the instance of {@link LLResponse}
+     * 
+     * @since 1.0
+     * @param _urlStr
+     *            the target url in {@link String}
+     * @param _client
+     *            the {@link DefaultHttpClient} with which we fired {@link LLRequest}.
+     * @param _response
+     *            the {@link HttpResponse} implementing object.
+     * @return the created {@link LLResponse}.
+     * @throws IllegalStateException
+     *             the illegal state exception
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     public static LLResponse createInstance( String _urlStr, DefaultHttpClient _client, HttpResponse _response )
             throws IllegalStateException, IOException {
         if( _response != null ) {
@@ -75,22 +101,44 @@ public class LLResponse extends LLBaseResponse
             return null;
         }
     }
+ 
 
-    protected LLResponse( String _urlStr ) {
-        super( _urlStr );
-    }
-
+    /**
+     * Instantiates a new {@link LLResponse}.
+     * 
+     * @since 1.0
+     * @param _urlStr
+     *            the target url in {@link String}
+     * @param _client
+     *            the {@link DefaultHttpClient} with which we fired {@link LLRequest}.
+     * @param _response
+     *            the {@link HttpResponse} implementing object.
+     */
     private LLResponse( String _urlStr, DefaultHttpClient _client, HttpResponse _response ) {
-        super( _urlStr );
-        mClient = _client;
-        mResponse = _response;
+        super( _urlStr, _client, _response );
     }
+
+    /**
+     * Instantiates a new {@link LLResponse}.
+     * @since 1.0
+     */
+    protected LLResponse() {
+        super();
+    }
+
 
     @Override
     public String toString() {
         return "Response@" + getUrlStr();
     }
 
+    /**
+     * Cach content. <br>
+     * <strong>After this method is called, {@link #mStream} can't be used.</strong>
+     * 
+     * @since 1.0
+     * @return the string
+     */
     public String cachContent() {
         if( mStream == null ) {
             LLL.w( ":| Try to get a cached text after calling release." );
@@ -103,7 +151,7 @@ public class LLResponse extends LLBaseResponse
                 String line = null;
 
                 while( (line = br.readLine()) != null ) {
-                    sb.append( line ); 
+                    sb.append( line );
                 }
 
                 br.close();
@@ -118,25 +166,22 @@ public class LLResponse extends LLBaseResponse
         }
     }
 
+    @Override
     public void release() throws IOException {
         if( mStream != null ) {
             mStream.close();
             mStream = null;
         }
-
-        if( mClient != null  ) {
-            mClient.getConnectionManager().shutdown();
-            mClient = null;
-        }
-
-        LLL.d( ":| " + getClass().getSimpleName() + " has been released." );
+        super.release();
     }
 
+    @Override
     public List<Cookie> getCookies() {
         return mCookies;
     }
 
+    @Override
     public InputStream getInputStream() {
         return mStream;
-    } 
+    }
 }

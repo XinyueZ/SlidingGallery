@@ -258,7 +258,10 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
                     if( !TextUtils.isEmpty( cookiesStr ) ) {
                         mHttpRequestBase.setHeader( "Cookie", cookiesStr );
                     }
-
+                    else {
+                        LLL.d( ":| Empty Cookies on the request." );
+                    }
+                    
                     // ----------------------------------------
                     // Set body
                     // ----------------------------------------

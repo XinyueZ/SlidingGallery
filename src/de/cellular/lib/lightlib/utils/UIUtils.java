@@ -32,6 +32,7 @@ import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -543,5 +544,15 @@ public class UIUtils
 
         Bitmap resizedBitmap = Bitmap.createBitmap( bitmap, 0, 0, width, height, matrix, true );
         return resizedBitmap;
+    }
+
+    public static void enableViews( ViewGroup _root, boolean _enabled ) {
+        for( int i = 0, cnt = _root.getChildCount(); i < cnt; i++ ) {
+            View child = _root.getChildAt( i );
+            child.setEnabled( _enabled );
+            if( child instanceof ViewGroup ) {
+                enableViews( _root, _enabled );
+            }
+        }
     }
 }

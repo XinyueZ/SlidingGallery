@@ -551,7 +551,7 @@ public class UIUtils
             View child = _root.getChildAt( i );
             child.setEnabled( _enabled );
             if( child instanceof ViewGroup ) {
-                enableViews( _root, _enabled );
+                enableViews( (ViewGroup) child, _enabled );
             }
         }
     }

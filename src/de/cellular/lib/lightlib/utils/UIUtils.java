@@ -555,4 +555,14 @@ public class UIUtils
             }
         }
     }
+    
+    public static void removeViews( ViewGroup _root  ) {
+        for( int i = 0, cnt = _root.getChildCount(); i < cnt; i++ ) {
+            View child = _root.getChildAt( i ); 
+            if( child instanceof ViewGroup ) {
+                removeViews( (ViewGroup) child  );
+            }
+            _root.removeView( child );
+        }
+    }
 }

@@ -66,7 +66,7 @@ public abstract class LLAbstractResponse {
      * @return the input stream
      */
     public InputStream getInputStream() {
-        return null;
+        return mStream;
     }
 
     /**

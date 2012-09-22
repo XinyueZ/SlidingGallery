@@ -61,7 +61,7 @@ public class LLRequestFile extends LLRequest {
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
-    protected File createOutputFile( LLBaseResponse _r, String _toFileName ) throws IOException {
+    protected File createOutputFile( LLHttpClientBaseResponse _r, String _toFileName ) throws IOException {
         FileHelper fileHelper = new FileHelper( mContext );
         File file = new File( fileHelper.getTargetPath(), _toFileName );
         fileHelper.writeFile( _r.getInputStream(), file );

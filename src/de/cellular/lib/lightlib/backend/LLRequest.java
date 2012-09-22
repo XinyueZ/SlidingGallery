@@ -47,8 +47,9 @@ import android.os.AsyncTask;
 import android.os.Message;
 import android.text.TextUtils;
 import android.webkit.WebView;
+import de.cellular.lib.lightlib.backend.base.LLAbstractResponse;
 import de.cellular.lib.lightlib.backend.base.LLRequestResponsibleObject;
-import de.cellular.lib.lightlib.log.LLL;
+import de.cellular.lib.lightlib.log.LL;
 
 /**
  * The abortable request object based on HttpClient. <br>
@@ -172,7 +173,7 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
                 sslSocketFactory = new EasySSLSocketFactory( trustStore );
             }
             catch( Exception _e ) {
-                LLL.e( _e.toString() );
+                LL.e( _e.toString() );
                 sslSocketFactory = SSLSocketFactory.getSocketFactory();
             }
             sslSocketFactory
@@ -226,14 +227,14 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
         Exception ret = null;
 
         if( _params == null ) {
-            LLL.e( ":( Request must have a URL." );
+            LL.e( ":( Request must have a URL." );
         }
         else {
             DefaultHttpClient client = (DefaultHttpClient) _params[0];
             if( client != null ) {
                 String urlstr = (String) _params[1];
                 if( !TextUtils.isEmpty( urlstr ) ) {
-                    LLL.i( ":| Request: " + urlstr );
+                    LL.i( ":| Request: " + urlstr );
                     mHttpRequestBase = createHttpRequest( urlstr );
 
                     // ----------------------------------------
@@ -259,7 +260,7 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
                         mHttpRequestBase.setHeader( "Cookie", cookiesStr );
                     }
                     else {
-                        LLL.d( ":| Empty Cookies on the request." );
+                        LL.d( ":| Empty Cookies on the request." );
                     }
                     
                     // ----------------------------------------
@@ -273,11 +274,11 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
                                 ((HttpPost) mHttpRequestBase).setEntity( new UrlEncodedFormEntity( keyValues ) );
                             }
                             catch( UnsupportedEncodingException _e ) {
-                                LLL.d( ":| Ignore setting data on HTTP-POST" );
+                                LL.d( ":| Ignore setting data on HTTP-POST" );
                             }
                         }
                         else {
-                            LLL.d( ":| Empty body on HTTP-POST" );
+                            LL.d( ":| Empty body on HTTP-POST" );
                         }
                     }
 
@@ -288,27 +289,25 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
                     try {
                         HttpResponse response = client.execute( mHttpRequestBase );
                         if( (mHttpRequestBase != null && mHttpRequestBase.isAborted()) || mHttpRequestBase == null ) {
-                            onEmptyResponse( new LLBaseResponse( urlstr, client, response ) );
+                            onEmptyResponse( new LLHttpClientBaseResponse( urlstr, client, response ) );
                         }
                         else {
-                            onResponse( LLResponse.createInstance( urlstr, client, response ) );
+                            onResponse( LLHttpClientResponse.createInstance( urlstr, client, response ) );
                         }
                     }
                     catch( Exception _e ) {
                         // Abort request. Aborted request could also fire an exception.
-                        if( mHttpRequestBase != null && !mHttpRequestBase.isAborted() ) {
-                            mHttpRequestBase.abort();
-                        }
-                        LLL.e( ":) The exception has been caught: " + _e.toString() );
+                        abort();
+                        LL.e( ":) The exception has been caught: " + _e.toString() );
                         ret = new LLRequestException( _e, urlstr );
                     }
                 }
                 else {
-                    LLL.e( ":( Unknown URL String for " + getClass().getSimpleName() + "." );
+                    LL.e( ":( Unknown URL String for " + getClass().getSimpleName() + "." );
                 }
             }
             else {
-                LLL.e( ":( An HttpClient is required." );
+                LL.e( ":( An HttpClient is required." );
             }
         }
         return ret;
@@ -320,57 +319,57 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
      * if( (mHttpRequestBase != null && mHttpRequestBase.isAborted()) || mHttpRequestBase == null )
      * 
      * @param _r
-     *            the {@link LLBaseResponse} or a decorated subclass of it that contains information after requesting.
+     *            the {@link LLAbstractResponse} or a decorated subclass of it that contains information after requesting.
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
-    protected void onEmptyResponse( LLBaseResponse _r ) throws IOException {
-        LLL.i( ":| " + getClass().getSimpleName() + " empty response:" + _r.toString() );
+    protected void onEmptyResponse( LLAbstractResponse _r ) throws IOException {
+        LL.i( ":| " + getClass().getSimpleName() + " empty response:" + _r.toString() );
         // Free http's thing i.e stream and client.
-        // If error at releasing, the request seems falid as well.
+        // If error at releasing, the request seems failed as well.
         _r.release();
     }
 
     /**
      * Default handler for responding request. <br>
-     * In the default implementation the {@link #finishResponse(int, LLBaseResponse)} is called that means the client can do super.onResponse(_r) when non-special message(just a {@link #REQUEST_SUCCESSED}) will be sent to the client. If a subclass of
-     * {@link LLResponse} like {@link LLImageResponse} sends a message specifies to it i.e {@link LLImageResponse}, then the {@link #finishResponse(int, LLBaseResponse)} must be called.
+     * In the default implementation the {@link #finishResponse(int, LLHttpClientBaseResponse)} is called that means the client can do super.onResponse(_r) when non-special message(just a {@link #REQUEST_SUCCESSED}) will be sent to the client. If a subclass of
+     * {@link LLHttpClientResponse} like {@link LLImageResponse} sends a message specifies to it i.e {@link LLImageResponse}, then the {@link #finishResponse(int, LLHttpClientBaseResponse)} must be called.
      * 
      * @param _r
-     *            the {@link LLBaseResponse} or a decorated subclass of it that contains information after requesting.
+     *            the {@link LLAbstractResponse} or a decorated subclass of it that contains information after requesting.
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
-    protected void onResponse( LLBaseResponse _r ) throws IOException {
+    protected void onResponse( LLAbstractResponse _r ) throws IOException {
         finishResponse( REQUEST_SUCCESSED, _r );
     }
 
     /**
      * Finish response by freeing resource and sending message to the client <br>
-     * This method can(must) be called after overriding {@link #onResponse(LLBaseResponse)}.
+     * This method can(must) be called after overriding {@link #onResponse(LLHttpClientBaseResponse)}.
      * 
      * @param _msg
      *            the message that will be sent through {@link #mHandler}
      * @param _r
-     *            the {@link LLBaseResponse} or a decorated subclass of it that contains information after requesting.
+     *            the {@link LLAbstractResponse} or a decorated subclass of it that contains information after requesting.
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
-    protected void finishResponse( int _msg, LLBaseResponse _r ) throws IOException {
-        LLL.i( ":) " + getClass().getSimpleName() + " is successfully:" + _r.toString() );
+    protected void finishResponse( int _msg, LLAbstractResponse _r ) throws IOException {
+        LL.i( ":) " + getClass().getSimpleName() + " is successfully:" + _r.toString() );
         if( mHandler != null ) {
             Message msg = Message.obtain( mHandler, _msg, _r );
             msg.sendToTarget();
         }
         // Free http's thing i.e stream and client.
-        // If error at releasing, the request seems falid as well.
+        // If error at releasing, the request seems failed as well.
         _r.release();
     }
 
     @Override
     protected void onPostExecute( Exception _result ) {
         if( _result != null ) {
-            LLL.e( ":( Faild response." );
+            LL.e( ":( Faild response." );
             if( mHandler != null ) {
                 Message.obtain( mHandler, REQUEST_FAILED, _result ).sendToTarget();
             }

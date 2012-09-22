@@ -27,7 +27,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Environment;
 
-import de.cellular.lib.lightlib.log.LLL;
+import de.cellular.lib.lightlib.log.LL;
 /**
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  *
@@ -83,7 +83,7 @@ public class FileHelper
         }
         catch( Exception e )
         {
-            LLL.e(  ":( SD card can't be used!" );
+            LL.e(  ":( SD card can't be used!" );
         }
         finally
         {

@@ -34,10 +34,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
-import de.cellular.lib.lightlib.log.LLL;
+import de.cellular.lib.lightlib.log.LL;
 
 /**
  * Define UI utils here. Some dialog, popup, progress dialog etc...
@@ -66,7 +67,7 @@ public class UIUtils
                                                            }
                                                            catch( Exception _e )
                                                            {
-                                                               LLL.e( _e.toString() );
+                                                               LL.e( _e.toString() );
                                                            }
 
                                                            // Important
@@ -93,7 +94,7 @@ public class UIUtils
                                                            }
                                                            catch( Exception _e )
                                                            {
-                                                               LLL.e( _e.toString() );
+                                                               LL.e( _e.toString() );
                                                            }
 
                                                            // Important
@@ -102,6 +103,16 @@ public class UIUtils
                                                            return drawable;
                                                        }
                                                    };
+
+    public static void showSoftKeyboard( Context context, EditText editText )  {
+        ((InputMethodManager) context.getSystemService( Context.INPUT_METHOD_SERVICE ))
+                .showSoftInput( editText, InputMethodManager.SHOW_IMPLICIT );
+    }
+
+    public static void hideSoftKeyboard( Context context, EditText editText )  {
+        ((InputMethodManager) context.getSystemService( Context.INPUT_METHOD_SERVICE ))
+                .hideSoftInputFromWindow( editText.getWindowToken(), 0);
+    }
 
     /**
      * Adds the blocking progress indicator.
@@ -112,6 +123,7 @@ public class UIUtils
      *            the _res id
      * @return the view
      */
+    @SuppressWarnings("deprecation")
     public static View addBlockingProgressIndicator( Activity _context, int _resId )
     {
         View progressView = LayoutInflater.from( _context ).inflate( _resId, null );
@@ -455,6 +467,7 @@ public class UIUtils
     public static View createDivider( Context _context )
     {
         View v = new View( _context );
+        @SuppressWarnings("deprecation")
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.FILL_PARENT, 1 );
         v.setBackgroundColor( _context.getResources().getColor( android.R.color.darker_gray ) );
@@ -555,12 +568,12 @@ public class UIUtils
             }
         }
     }
-    
-    public static void removeViews( ViewGroup _root  ) {
+
+    public static void removeViews( ViewGroup _root ) {
         for( int i = 0, cnt = _root.getChildCount(); i < cnt; i++ ) {
-            View child = _root.getChildAt( i ); 
+            View child = _root.getChildAt( i );
             if( child instanceof ViewGroup ) {
-                removeViews( (ViewGroup) child  );
+                removeViews( (ViewGroup) child );
             }
             _root.removeView( child );
         }

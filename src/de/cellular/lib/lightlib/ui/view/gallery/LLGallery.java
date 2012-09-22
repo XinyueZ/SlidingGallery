@@ -35,7 +35,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import de.cellular.lib.lightlib.R;
-import de.cellular.lib.lightlib.log.LLL;
+import de.cellular.lib.lightlib.log.LL;
 import de.cellular.lib.lightlib.ui.view.gallery.base.ILLGallery;
 
 /**
@@ -432,7 +432,7 @@ public class LLGallery extends RelativeLayout implements LLSlideView.OnItemClick
     @Override
     public void setImages( List<Bitmap> _bitmaps ) {
         if( _bitmaps == null ) {
-            LLL.e( "Image source is NULL." );
+            LL.e( "Image source is NULL." );
         }
         else {
             List<Bitmap> newBmps = new ArrayList<Bitmap>();

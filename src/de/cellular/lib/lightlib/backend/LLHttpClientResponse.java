@@ -16,10 +16,8 @@
 
 package de.cellular.lib.lightlib.backend;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
@@ -30,13 +28,12 @@ import org.apache.http.HttpStatus;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.text.TextUtils;
-import de.cellular.lib.lightlib.log.LLL;
+import de.cellular.lib.lightlib.log.LL;
 
 /**
- * {@link LLResponse} encapsulates the necessary information for the corresponding {@link LLRequest}.
+ * {@link LLHttpClientResponse} encapsulates the necessary information for the corresponding {@link LLRequest}.
  * <p>
- * The class and it's subclasses can't be initialized. However they(exclude {@link LLResponse}) could be decorated with a {@link LLResponse} instance that is created after the {@link DefaultHttpClient} has finished execution.
+ * The class and it's subclasses can't be initialized. However they(exclude {@link LLHttpClientResponse}) could be decorated with a {@link LLHttpClientResponse} instance that is created after the {@link DefaultHttpClient} has finished execution.
  * <p>
  * <strong>Known subclasses are</strong>
  * <p>
@@ -49,14 +46,11 @@ import de.cellular.lib.lightlib.log.LLL;
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  * 
  */
-public class LLResponse extends LLBaseResponse
-{
-    private InputStream  mStream;
-    private List<Cookie> mCookies;
-    private String       mCachedText;
+public class LLHttpClientResponse extends LLHttpClientBaseResponse {
+    protected List<Cookie> mCookies;
 
     /**
-     * Creates the instance of {@link LLResponse}
+     * Creates the instance of {@link LLHttpClientResponse}
      * 
      * @since 1.0
      * @param _urlStr
@@ -65,16 +59,16 @@ public class LLResponse extends LLBaseResponse
      *            the {@link DefaultHttpClient} with which we fired {@link LLRequest}.
      * @param _response
      *            the {@link HttpResponse} implementing object.
-     * @return the created {@link LLResponse}.
+     * @return the created {@link LLHttpClientResponse}.
      * @throws IllegalStateException
      *             the illegal state exception
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
-    public static LLResponse createInstance( String _urlStr, DefaultHttpClient _client, HttpResponse _response )
+    public static LLHttpClientResponse createInstance( String _urlStr, DefaultHttpClient _client, HttpResponse _response )
             throws IllegalStateException, IOException {
         if( _response != null ) {
-            LLResponse r = new LLResponse( _urlStr, _client, _response );
+            LLHttpClientResponse r = new LLHttpClientResponse( _urlStr, _client, _response );
             int statusCode = r.mResponse.getStatusLine().getStatusCode();
             HttpEntity entity = r.mResponse.getEntity();
             if( statusCode == HttpStatus.SC_OK && entity != null ) {
@@ -97,14 +91,13 @@ public class LLResponse extends LLBaseResponse
             return null;
         }
         else {
-            LLL.e( ":( Can't create an instance with NULL HttpResponse." );
+            LL.e( ":( Can't create an instance with NULL HttpResponse." );
             return null;
         }
     }
- 
 
     /**
-     * Instantiates a new {@link LLResponse}.
+     * Instantiates a new {@link LLHttpClientResponse}.
      * 
      * @since 1.0
      * @param _urlStr
@@ -114,74 +107,25 @@ public class LLResponse extends LLBaseResponse
      * @param _response
      *            the {@link HttpResponse} implementing object.
      */
-    private LLResponse( String _urlStr, DefaultHttpClient _client, HttpResponse _response ) {
+    private LLHttpClientResponse( String _urlStr, DefaultHttpClient _client, HttpResponse _response ) {
         super( _urlStr, _client, _response );
     }
 
     /**
-     * Instantiates a new {@link LLResponse}.
-     * @since 1.0
-     */
-    protected LLResponse() {
-        super();
-    }
-
-
-    @Override
-    public String toString() {
-        return "Response@" + getUrlStr();
-    }
-
-    /**
-     * Cach content. <br>
-     * <strong>After this method is called, {@link #mStream} can't be used.</strong>
+     * Instantiates a new {@link LLHttpClientResponse}.
      * 
      * @since 1.0
-     * @return the string
      */
-    public String cachContent() {
-        if( mStream == null ) {
-            LLL.w( ":| Try to get a cached text after calling release." );
-            return null;
-        }
-        else if( TextUtils.isEmpty( mCachedText ) ) {
-            try {
-                BufferedReader br = new BufferedReader( new InputStreamReader( mStream ), 1024 * 1024 );
-                StringBuilder sb = new StringBuilder();
-                String line = null;
-
-                while( (line = br.readLine()) != null ) {
-                    sb.append( line );
-                }
-
-                br.close();
-                return mCachedText = sb.toString();
-            }
-            catch( Exception _e ) {
-                return null;
-            }
-        }
-        else {
-            return mCachedText;
-        }
+    public LLHttpClientResponse() {
+        super();
     }
-
-    @Override
-    public void release() throws IOException {
-        if( mStream != null ) {
-            mStream.close();
-            mStream = null;
-        }
-        super.release();
-    }
-
-    @Override
+ 
+    /**
+     * Gets the org.apache.http.cookie.Cookies.
+     *
+     * @return the cookies   
+     */
     public List<Cookie> getCookies() {
         return mCookies;
-    }
-
-    @Override
-    public InputStream getInputStream() {
-        return mStream;
     }
 }

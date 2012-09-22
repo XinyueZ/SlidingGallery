@@ -20,7 +20,7 @@ import android.os.Looper;
 import android.os.Message;
 import de.cellular.lib.lightlib.backend.LLRequest;
 import de.cellular.lib.lightlib.backend.LLRequestImage;
-import de.cellular.lib.lightlib.log.LLL;
+import de.cellular.lib.lightlib.log.LL;
 import de.cellular.lib.lightlib.ui.view.gallery.LLAsyncGallery;
 
 /**
@@ -125,7 +125,7 @@ public abstract class LLRequestResponsibleObject extends Handler implements ILLR
                 }
             break;
             default:
-                LLL.i( ":| Unkown event." );
+                LL.i( ":| Unkown event." );
             break;
         }
 

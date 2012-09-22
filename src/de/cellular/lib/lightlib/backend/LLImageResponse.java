@@ -17,15 +17,13 @@ package de.cellular.lib.lightlib.backend;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 
-import org.apache.http.cookie.Cookie;
-
 import android.graphics.Bitmap;
+import de.cellular.lib.lightlib.backend.base.LLAbstractResponse;
 
 /**
- * The Class LLImageResponse that decorates a {@link LLResponse}. Additional to {@link LLResponse} that it contains a ref to the decoded {@link Bitmap}.
+ * The Class LLImageResponse that decorates a {@link LLAbstractResponse}. Additional to {@link LLAbstractResponse} that it contains a ref to the decoded {@link Bitmap}.
  * 
  * @version 1.0
  * @see {@link http://en.wikipedia.org/wiki/Decorator_pattern}
@@ -34,10 +32,10 @@ import android.graphics.Bitmap;
  * @see {@link LLRequestImage#readStreamToBitmap(LLImageResponse)} for more info.
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  */
-public class LLImageResponse extends LLResponse
+public class LLImageResponse extends LLHttpClientResponse
 {
     private Bitmap         mBitmap;
-    private LLBaseResponse mBaseResponse;
+    private LLAbstractResponse mBaseResponse;
 
     /**
      * Instantiates a new {@link LLImageResponse}.
@@ -46,7 +44,7 @@ public class LLImageResponse extends LLResponse
      * @param _baseResponse
      *            the response
      */
-    public LLImageResponse( LLBaseResponse _baseResponse ) {
+    public LLImageResponse( LLAbstractResponse _baseResponse ) {
         super();
         mBaseResponse = _baseResponse;
     }
@@ -75,11 +73,7 @@ public class LLImageResponse extends LLResponse
     public void setBitmap( Bitmap _bitmap ) {
         mBitmap = _bitmap;
     }
-
-    @Override
-    public List<Cookie> getCookies() {
-        return mBaseResponse.getCookies();
-    }
+ 
 
     @Override
     public InputStream getInputStream() {

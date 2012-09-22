@@ -45,7 +45,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import de.cellular.lib.lightlib.R;
-import de.cellular.lib.lightlib.log.LLL;
+import de.cellular.lib.lightlib.log.LL;
 
 /**
  * A sliding view draws bitmaps with finger or without finger under control of timer.
@@ -458,7 +458,7 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
      */
     public void setImages( List<Bitmap> _bitmaps, int _maxWidth ) {
         if( _bitmaps == null ) {
-            LLL.e( "Bitmap source is NULL." );
+            LL.e( "Bitmap source is NULL." );
         }
         else {
             mBitmaps = _bitmaps;
@@ -493,7 +493,7 @@ class LLSlideView extends View implements ComponentCallbacks, OnGestureListener,
      */
     public void appendImage( Bitmap _bitmap, int _maxWidth ) {
         if( _bitmap == null ) {
-            LLL.e( "Bitmap source is NULL." );
+            LL.e( "Bitmap source is NULL." );
         }
         else {
             mParent.findViewById( R.id.ll_gallery_pb ).setVisibility( View.GONE );

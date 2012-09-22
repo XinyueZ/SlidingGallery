@@ -23,13 +23,13 @@ import android.util.Log;
  * 
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  */
-public class LLL
+public class LL
 {
     private static boolean      mDebugable = true;
 
     private static final String DEBUG_TAG  = "#!#!";
 
-    private static LLL          sLogger    = new LLL();
+    private static LL          sLogger    = new LL();
 
     private static String mkMessage( String msg )
     {
@@ -232,7 +232,7 @@ public class LLL
         return Log.getStackTraceString( _e );
     }
 
-    public static LLL getLogger()
+    public static LL getLogger()
     {
         return sLogger;
     }

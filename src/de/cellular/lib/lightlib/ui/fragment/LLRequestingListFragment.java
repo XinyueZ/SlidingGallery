@@ -31,7 +31,7 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import de.cellular.lib.lightlib.backend.base.ILLRequestResponsible;
-import de.cellular.lib.lightlib.log.LLL;
+import de.cellular.lib.lightlib.log.LL;
 import de.cellular.lib.lightlib.ui.anim.Rotate3dAnimation;
 
 /**
@@ -46,61 +46,61 @@ public abstract class LLRequestingListFragment extends ListFragment implements I
     @Override
     public void onActivityCreated( Bundle _savedInstanceState ) {
         super.onActivityCreated( _savedInstanceState );
-        LLL.d( getClass().getSimpleName() + "::onActivityCreated" );
+        LL.d( getClass().getSimpleName() + "::onActivityCreated" );
     }
 
     @Override
     public View onCreateView( LayoutInflater _inflater, ViewGroup _container, Bundle _savedInstanceState ) {
-        LLL.d( getClass().getSimpleName() + "::onCreateView" );
+        LL.d( getClass().getSimpleName() + "::onCreateView" );
         return null;
     }
 
     @Override
     public void onSaveInstanceState( Bundle _outState ) {
         super.onSaveInstanceState( _outState );
-        LLL.d( getClass().getSimpleName() + "::onSaveInstanceState" );
+        LL.d( getClass().getSimpleName() + "::onSaveInstanceState" );
     }
 
     @Override
     public void onHiddenChanged( boolean _hidden ) {
-        LLL.d( getClass().getSimpleName() + "::onHiddenChanged" );
+        LL.d( getClass().getSimpleName() + "::onHiddenChanged" );
         super.onHiddenChanged( _hidden );
     }
 
     @Override
     public void onViewCreated( View _view, Bundle _savedInstanceState ) {
-        LLL.d( getClass().getSimpleName() + "::onViewCreated" );
+        LL.d( getClass().getSimpleName() + "::onViewCreated" );
         super.onViewCreated( _view, _savedInstanceState );
     }
 
     @Override
     public void onInflate( Activity _activity, AttributeSet _attrs, Bundle _savedInstanceState ) {
-        LLL.d( getClass().getSimpleName() + "::onInflate" );
+        LL.d( getClass().getSimpleName() + "::onInflate" );
         super.onInflate( _activity, _attrs, _savedInstanceState );
     }
 
     @Override
     public void onCreate( Bundle _savedInstanceState ) {
         super.onCreate( _savedInstanceState );
-        LLL.d( getClass().getSimpleName() + "::onCreate" );
+        LL.d( getClass().getSimpleName() + "::onCreate" );
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        LLL.d( getClass().getSimpleName() + "::onPause" );
+        LL.d( getClass().getSimpleName() + "::onPause" );
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        LLL.d( getClass().getSimpleName() + "::onResume" );
+        LL.d( getClass().getSimpleName() + "::onResume" );
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        LLL.d( getClass().getSimpleName() + "::onStart" );
+        LL.d( getClass().getSimpleName() + "::onStart" );
 
 //        startRotate3dAnimationIn();
     }
@@ -108,7 +108,7 @@ public abstract class LLRequestingListFragment extends ListFragment implements I
     @Override
     public void onStop() {
         super.onStop();
-        LLL.d( getClass().getSimpleName() + "::onStop" );
+        LL.d( getClass().getSimpleName() + "::onStop" );
 
 //        startRotate3dAnimationOut();
     }
@@ -116,25 +116,25 @@ public abstract class LLRequestingListFragment extends ListFragment implements I
     @Override
     public void onDestroy() {
         super.onDestroy();
-        LLL.d( getClass().getSimpleName() + "::onDestroy" );
+        LL.d( getClass().getSimpleName() + "::onDestroy" );
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        LLL.d( getClass().getSimpleName() + "::onDestroyView" );
+        LL.d( getClass().getSimpleName() + "::onDestroyView" );
     }
 
     @Override
     public void onAttach( Activity _activity ) {
         super.onAttach( _activity );
-        LLL.d( getClass().getSimpleName() + "::onAttach" );
+        LL.d( getClass().getSimpleName() + "::onAttach" );
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        LLL.d( getClass().getSimpleName() + "::onDetach" );
+        LL.d( getClass().getSimpleName() + "::onDetach" );
     }
 
     

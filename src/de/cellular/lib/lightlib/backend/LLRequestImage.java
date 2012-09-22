@@ -24,8 +24,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Message;
+import de.cellular.lib.lightlib.backend.base.LLAbstractResponse;
 import de.cellular.lib.lightlib.backend.base.LLRequestResponsibleObject;
-import de.cellular.lib.lightlib.log.LLL;
+import de.cellular.lib.lightlib.log.LL;
 import de.cellular.lib.lightlib.utils.UIUtils;
 
 /**
@@ -39,7 +40,7 @@ public class LLRequestImage extends LLRequestFile
 
     public static class RequestedSize
     {
-        public int reqWidth = -1;
+        public int reqWidth  = -1;
         public int reqHeight = -1;
 
         public boolean isValid() {
@@ -49,29 +50,29 @@ public class LLRequestImage extends LLRequestFile
 
     private RequestedSize mReqSize;
 
-    private LLRequestImage( Context _context, LLRequestResponsibleObject _handler, Method _method,
+    protected LLRequestImage( Context _context, LLRequestResponsibleObject _handler, Method _method,
             RequestedSize _reqSize ) {
         super( _context, _handler, _method );
         mReqSize = _reqSize;
     }
 
     @Override
-    protected void onResponse( LLBaseResponse _r ) {
+    protected void onResponse( LLAbstractResponse _r ) {
         try {
             LLImageResponse ret = new LLImageResponse( _r );
             readStreamToBitmap( ret );
-            LLL.i( ":) Reading Bitmap successfully." );
+            LL.i( ":) Reading Bitmap successfully." );
 
             finishResponse( REQUEST_IMAGE_SUCCESSED, ret );
         }
         catch( Exception _e )
         {
-            LLL.e( ":( Error while handling Bitmap:" + _e.toString() );
+            LL.e( ":( Error while handling Bitmap:" + _e.toString() );
             try {
                 _r.release();
             }
             catch( IOException _e1 ) {
-                LLL.e( ":( Failed to release res:" + _e.toString() );
+                LL.e( ":( Failed to release res:" + _e.toString() );
             }
             // Info UI that it be failed.
             if( mHandler != null ) {
@@ -91,28 +92,28 @@ public class LLRequestImage extends LLRequestFile
                 final BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inJustDecodeBounds = true;
                 BitmapFactory.decodeFile( tmpFile.getAbsolutePath(), options );
-                options.inSampleSize = calculateInSampleSize( options, mReqSize ); 
+                options.inSampleSize = calculateInSampleSize( options, mReqSize );
                 options.inJustDecodeBounds = false;
                 retBp = BitmapFactory.decodeFile( tmpFile.getAbsolutePath(), options );
                 if( retBp != null ) {
-                    LLL.i( ":) Decoded file with some options successfully." );
+                    LL.i( ":) Decoded file with some options successfully." );
                 }
                 else {
                     throw new Exception();
                 }
             }
             catch( Exception _ee ) {
-                LLL.e( ":( Give up! The Bitmap can't be decoded definitly." );
+                LL.e( ":( Give up! The Bitmap can't be decoded definitly." );
             }
             // Scale the image and cache it.
             retBp = doScalingImage( retBp );
-//            LLImageCache.setSendungImage( _r.getUrlStr(), retBp );
+            // LLImageCache.setSendungImage( _r.getUrlStr(), retBp );
             _r.setBitmap( retBp );
             if( tmpFile.delete() ) {
-                LLL.i( "Del:" + fname );
+                LL.i( "Del:" + fname );
             }
             else {
-                LLL.e( "Can't Del:" + fname );
+                LL.e( "Can't Del:" + fname );
             }
         }
     }
@@ -127,7 +128,7 @@ public class LLRequestImage extends LLRequestFile
      */
     private static int calculateInSampleSize( BitmapFactory.Options _options, RequestedSize _reqSize ) {
         int inSampleSize = 1;
-        LLL.d( "reqw=" + _reqSize.reqWidth + ",reqh=" + _reqSize.reqHeight + ",outw=" + _options.outWidth + ",outh="
+        LL.d( "reqw=" + _reqSize.reqWidth + ",reqh=" + _reqSize.reqHeight + ",outw=" + _options.outWidth + ",outh="
                 + _options.outHeight );
         if( _reqSize.isValid() && (_options.outHeight > _reqSize.reqHeight || _options.outWidth > _reqSize.reqWidth) ) {
             if( _options.outWidth > _options.outHeight ) {
@@ -137,7 +138,7 @@ public class LLRequestImage extends LLRequestFile
                 inSampleSize = Math.round( (float) _options.outWidth / (float) _reqSize.reqWidth );
             }
         }
-        LLL.d( "inSampleSize=" + inSampleSize );
+        LL.d( "inSampleSize=" + inSampleSize );
         return inSampleSize;
     }
 

@@ -2,12 +2,13 @@ package de.cellular.lib.lightlib.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 
 /**
  * The Class DataUtils.
  */
 public class DataUtils {
-    public static String encodedKeywords( String _keywords )
+    public static String encode( String _keywords )
     {
         try
         {
@@ -25,6 +26,103 @@ public class DataUtils {
                     .replace( "[", "%5B" ).replace( "\\", "%5C" ).replace( "]", "%5D" )
                     .replace( "_", "%5F" ).replace( "`", "%60" ).replace( "{", "%7B" )
                     .replace( "|", "%7C" ).replace( "}", "%7D" ) );
+        }
+    }
+
+    public static String formatDistance( double dist )
+    {
+        DecimalFormat df = null;
+        String diststr = "";
+
+        if( dist >= 1000.0 )
+        {
+            dist = dist / 1000.0;
+            df = new DecimalFormat( "####.0" );
+            diststr = df.format( dist ) + " km";
+        }
+        else
+        {
+            df = new DecimalFormat( "####" );
+            diststr = df.format( dist ) + " m";
+        }
+
+        return diststr;
+    }
+
+    public static String formatDistanceWithoutUnit( double dist )
+    {
+        DecimalFormat df = null;
+        String diststr = "";
+
+        if( dist >= 1000.0 )
+        {
+            dist = dist / 1000.0;
+            df = new DecimalFormat( "####.0" );
+            diststr = df.format( dist );
+        }
+        else
+        {
+            df = new DecimalFormat( "####" );
+            diststr = df.format( dist );
+        }
+
+        return diststr;
+    }
+
+    public static String calcMinutesSeconds( double t )
+    {
+        long timeInSeconds = Math.round( t );
+        // Logger.i(TAG, "Duration = " + t + ".........................");
+        long hours, minutes, seconds;
+        hours = timeInSeconds / 3600;
+        timeInSeconds = timeInSeconds - (hours * 3600);
+        minutes = timeInSeconds / 60;
+        timeInSeconds = timeInSeconds - (minutes * 60);
+        seconds = timeInSeconds;
+        if( hours == 0 && minutes == 0 && seconds == 0 )
+            return "soon";
+        else
+        {
+            StringBuilder sb = new StringBuilder();
+            // sb.append(hours);
+            // sb.append(":");
+            sb.append( toDateString( minutes ) );
+            sb.append( ":" );
+            sb.append( toDateString( seconds ) );
+            return sb.toString();
+        }
+    }
+
+    private static String toDateString( long time )
+    {
+        if( time < 10 )
+        {
+            return "0" + time;
+        }
+        return String.valueOf( time );
+    }
+
+    public static String calcHourMinutesSeconds( double t )
+    {
+        long timeInSeconds = Math.round( t );
+        // Logger.i(TAG, "Duration = " + t + ".........................");
+        long hours, minutes, seconds;
+        hours = timeInSeconds / 3600;
+        timeInSeconds = timeInSeconds - (hours * 3600);
+        minutes = timeInSeconds / 60;
+        timeInSeconds = timeInSeconds - (minutes * 60);
+        seconds = timeInSeconds;
+        if( hours == 0 && minutes == 0 && seconds == 0 )
+            return "soon";
+        else
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.append( hours );
+            sb.append( ":" );
+            sb.append( toDateString( minutes ) );
+            sb.append( ":" );
+            sb.append( toDateString( seconds ) );
+            return sb.toString();
         }
     }
 }

@@ -19,13 +19,12 @@ package de.cellular.lib.lightlib.backend;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 
-import org.apache.http.cookie.Cookie;
+import de.cellular.lib.lightlib.backend.base.LLAbstractResponse;
 
 /**
- * The Class LLFileResponse that decorates a {@link LLResponse}. Additional to {@link LLResponse} that it contains a ref to the downloaded file.
+ * The Class LLFileResponse that decorates a {@link LLAbstractResponse}. Additional to {@link LLAbstractResponse} that it contains a ref to the downloaded file.
  * 
  * @version 1.0
  * @see {@link http://en.wikipedia.org/wiki/Decorator_pattern}
@@ -33,10 +32,9 @@ import org.apache.http.cookie.Cookie;
  *      To know more about the Decorator pattern from GOF.
  * @author Chris Xinyue Zhao <hasszhao@gmail.com>
  */
-public class LLFileResponse extends LLResponse {
-
+public class LLFileResponse extends LLHttpClientResponse {
     private File           mOutput;
-    private LLBaseResponse mBaseResponse;
+    private LLAbstractResponse mBaseResponse;
 
     /**
      * Instantiates a new {@link LLFileResponse}.
@@ -47,7 +45,7 @@ public class LLFileResponse extends LLResponse {
      * @param _file
      *            the downloaded {@link File}
      */
-    public LLFileResponse( LLBaseResponse _baseResponse, File _file ) {
+    public LLFileResponse( LLHttpClientBaseResponse _baseResponse, File _file ) {
         super();
         mBaseResponse = _baseResponse;
         mOutput = _file;
@@ -62,12 +60,7 @@ public class LLFileResponse extends LLResponse {
     public File getOutputFile() {
         return mOutput;
     }
-
-    @Override
-    public List<Cookie> getCookies() {
-        return mBaseResponse.getCookies();
-    }
-
+ 
     @Override
     public InputStream getInputStream() {
         return mBaseResponse.getInputStream();

@@ -68,7 +68,7 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
 {
     private HttpRequestBase              mHttpRequestBase;
 
-    protected static final int           TIME_OUT = 15 * 1000;
+    protected static final int           TIME_OUT = 20 * 1000;
     protected String                     mUserAgent;
     protected LLRequestResponsibleObject mHandler;
     protected Context                    mContext;

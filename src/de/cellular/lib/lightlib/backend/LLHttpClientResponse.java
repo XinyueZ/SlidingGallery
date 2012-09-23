@@ -18,14 +18,12 @@ package de.cellular.lib.lightlib.backend;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import de.cellular.lib.lightlib.log.LL;
@@ -47,7 +45,6 @@ import de.cellular.lib.lightlib.log.LL;
  * 
  */
 public class LLHttpClientResponse extends LLHttpClientBaseResponse {
-    protected List<Cookie> mCookies;
 
     /**
      * Creates the instance of {@link LLHttpClientResponse}
@@ -118,14 +115,5 @@ public class LLHttpClientResponse extends LLHttpClientBaseResponse {
      */
     public LLHttpClientResponse() {
         super();
-    }
- 
-    /**
-     * Gets the org.apache.http.cookie.Cookies.
-     *
-     * @return the cookies   
-     */
-    public List<Cookie> getCookies() {
-        return mCookies;
     }
 }

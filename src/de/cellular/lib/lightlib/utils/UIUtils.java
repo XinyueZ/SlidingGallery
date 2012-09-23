@@ -122,8 +122,7 @@ public class UIUtils
      * @param _resId
      *            the _res id
      * @return the view
-     */
-    @SuppressWarnings("deprecation")
+     */ 
     public static View addBlockingProgressIndicator( Activity _context, int _resId )
     {
         View progressView = LayoutInflater.from( _context ).inflate( _resId, null );
@@ -466,8 +465,7 @@ public class UIUtils
      */
     public static View createDivider( Context _context )
     {
-        View v = new View( _context );
-        @SuppressWarnings("deprecation")
+        View v = new View( _context ); 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.FILL_PARENT, 1 );
         v.setBackgroundColor( _context.getResources().getColor( android.R.color.darker_gray ) );

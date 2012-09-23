@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.apache.http.cookie.Cookie;
 
 import android.text.TextUtils;
 import de.cellular.lib.lightlib.log.LL;
@@ -18,6 +21,7 @@ import de.cellular.lib.lightlib.log.LL;
 public abstract class LLAbstractResponse {
     protected String              mUrlStr;
     protected InputStream         mStream;
+    protected List<Cookie>        mCookies;
     protected String              mCachedText;
     protected Map<String, Object> mTags = new HashMap<String, Object>();
 
@@ -82,7 +86,7 @@ public abstract class LLAbstractResponse {
             mStream = null;
         }
     }
-    
+
     /**
      * Cach content. <br>
      * <strong>After this method is called, {@link #mStream} can't be used.</strong>
@@ -115,5 +119,14 @@ public abstract class LLAbstractResponse {
         else {
             return mCachedText;
         }
+    }
+
+    /**
+     * Gets the org.apache.http.cookie.Cookies.
+     * 
+     * @return the cookies
+     */
+    public List<Cookie> getCookies() {
+        return mCookies;
     }
 }

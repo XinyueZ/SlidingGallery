@@ -17,7 +17,10 @@ package de.cellular.lib.lightlib.backend;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
+
+import org.apache.http.cookie.Cookie;
 
 import android.graphics.Bitmap;
 import de.cellular.lib.lightlib.backend.base.LLAbstractResponse;
@@ -103,5 +106,10 @@ public class LLImageResponse extends LLHttpClientResponse
     @Override
     public void setTag( String _key, Object _value ) {
         mBaseResponse.setTag( _key, _value );
+    }
+    
+    @Override
+    public List<Cookie> getCookies() { 
+        return mBaseResponse.getCookies();
     }
 }

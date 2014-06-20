@@ -74,12 +74,12 @@ public class APNManager {
      * @param _keyValues
      *            the _key values
      */
-    public void addAPN( String _name, ContentValues _keyValues ) {
+    public int addAPN( String _name, ContentValues _keyValues ) {
         if( findByName( _name ) ) {
-            updateAPN( _name, _keyValues );
+            return updateAPN( _name, _keyValues );
         }
         else {
-            insertAPN( _keyValues );
+            return insertAPN( _keyValues );
         }
     }
 

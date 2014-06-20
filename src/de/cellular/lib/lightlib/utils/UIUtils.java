@@ -16,6 +16,7 @@
 
 package de.cellular.lib.lightlib.utils;
 
+import java.io.File;
 import java.net.URL;
 
 import android.app.Activity;
@@ -25,9 +26,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.view.LayoutInflater;
@@ -104,14 +107,14 @@ public class UIUtils
                                                        }
                                                    };
 
-    public static void showSoftKeyboard( Context context, EditText editText )  {
+    public static void showSoftKeyboard( Context context, EditText editText ) {
         ((InputMethodManager) context.getSystemService( Context.INPUT_METHOD_SERVICE ))
                 .showSoftInput( editText, InputMethodManager.SHOW_IMPLICIT );
     }
 
-    public static void hideSoftKeyboard( Context context, EditText editText )  {
+    public static void hideSoftKeyboard( Context context, EditText editText ) {
         ((InputMethodManager) context.getSystemService( Context.INPUT_METHOD_SERVICE ))
-                .hideSoftInputFromWindow( editText.getWindowToken(), 0);
+                .hideSoftInputFromWindow( editText.getWindowToken(), 0 );
     }
 
     /**
@@ -122,7 +125,8 @@ public class UIUtils
      * @param _resId
      *            the _res id
      * @return the view
-     */ 
+     */
+    @SuppressWarnings("deprecation")
     public static View addBlockingProgressIndicator( Activity _context, int _resId )
     {
         View progressView = LayoutInflater.from( _context ).inflate( _resId, null );
@@ -465,7 +469,8 @@ public class UIUtils
      */
     public static View createDivider( Context _context )
     {
-        View v = new View( _context ); 
+        View v = new View( _context );
+        @SuppressWarnings("deprecation")
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.FILL_PARENT, 1 );
         v.setBackgroundColor( _context.getResources().getColor( android.R.color.darker_gray ) );
@@ -576,4 +581,48 @@ public class UIUtils
             _root.removeView( child );
         }
     }
+
+    public static void openSMS( Context _context, String _telNum, String _text ) {
+        if( _context != null ) {
+            String phoneNumber = _telNum;
+            Intent intent = new Intent( Intent.ACTION_SENDTO, Uri.parse( new StringBuilder().append( "smsto:" ).append( phoneNumber ).toString() ) );
+            intent.putExtra( "sms_body", _text );
+            intent.putExtra( "compose_mode", true );
+            _context.startActivity( intent );
+        }
+    }
+
+    public static void openEmail( Context _context, String _to ) {
+        if( _context != null ) {
+            Intent i = new Intent( Intent.ACTION_SEND );
+            i.putExtra( android.content.Intent.EXTRA_EMAIL, new String[] { _to } );
+            i.setType( "text/plain" );
+            _context.startActivity( i );
+        }
+    }
+
+    public static void openTel( Context _context, String _to ) {
+        if( _context != null ) {
+            Intent intent = new Intent( Intent.ACTION_DIAL );
+            intent.setData( Uri.parse( new StringBuilder().append( "tel:" ).append( _to ).toString() ) );
+            _context.startActivity( intent );
+        }
+    }
+
+    public static void openUrl( Context _context, String _to ) {
+        if( _context != null ) {
+            Intent i = new Intent( Intent.ACTION_VIEW );
+            i.setData( Uri.parse( _to ) );
+            _context.startActivity( i );
+        }
+    } 
+    
+    public static void opePdf( Context _context, String _to ) {
+        if( _context != null ) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            File file = new File( _to  );
+            intent.setDataAndType( Uri.fromFile( file ), "application/pdf" );
+            _context.startActivity(intent);
+        }
+    }   
 }

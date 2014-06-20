@@ -3,6 +3,9 @@ package de.cellular.lib.lightlib.utils;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The Class DataUtils.
@@ -124,5 +127,44 @@ public class DataUtils {
             sb.append( toDateString( seconds ) );
             return sb.toString();
         }
+    }
+
+    public static String formattedAndStringFromList( List<String> _list, String _last ) {
+        int size = _list.size();
+        StringBuilder sb = new StringBuilder();
+        if( size == 1 ) {
+            sb.append( _list.get( 0 ) );
+            return sb.toString();
+        }
+        else if( size == 2 ) {
+            sb.append( _list.get( 0 ) )
+                    .append( _last )
+                    .append( _list.get( 1 ) );
+            return sb.toString();
+        }
+        else {
+            for( int i = 0, cnt = size - 1; i < cnt; i++ ) {
+                sb.append( _list.get( i ) );
+                if( i < cnt - 1 ) {
+                    sb.append( ",&nbsp;" );
+                }
+            }
+            sb.append( _last ).append( _list.get( size - 1 ) );
+            return sb.toString();
+        }
+    }
+
+    public static boolean isEmailValid( String email ) {
+        boolean isValid = false;
+
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        CharSequence inputStr = email;
+
+        Pattern pattern = Pattern.compile( expression, Pattern.CASE_INSENSITIVE );
+        Matcher matcher = pattern.matcher( inputStr );
+        if( matcher.matches() ) {
+            isValid = true;
+        }
+        return isValid;
     }
 }

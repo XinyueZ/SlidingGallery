@@ -1,0 +1,8 @@
+package com.gmail.at.hasszhao.utils.location.base;
+
+import com.gmail.at.hasszhao.utils.geo.LocationDV;
+
+public interface ILocationUpdateListener
+{
+    void onLocationUpdate( LocationDV locationDV );
+}

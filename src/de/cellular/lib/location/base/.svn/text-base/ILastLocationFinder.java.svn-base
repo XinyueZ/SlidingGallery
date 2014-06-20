@@ -1,0 +1,12 @@
+package com.gmail.at.hasszhao.utils.location.base;
+
+import android.location.Location;
+
+public interface ILastLocationFinder
+{
+    public Location getLastBestLocation( int minDistance, long minTime );
+
+    // public void setChangedLocationListener(LocationListener l);
+    //
+    // public void cancel();
+}

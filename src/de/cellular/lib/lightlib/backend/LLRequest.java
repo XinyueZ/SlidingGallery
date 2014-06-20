@@ -23,9 +23,7 @@ import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -34,6 +32,7 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
@@ -68,7 +67,7 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
 {
     private HttpRequestBase              mHttpRequestBase;
 
-    protected static final int           TIME_OUT = 20 * 1000;
+    protected static final int           TIME_OUT = 60 * 60 * 1000;
     protected String                     mUserAgent;
     protected LLRequestResponsibleObject mHandler;
     protected Context                    mContext;
@@ -268,10 +267,10 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
                     // ----------------------------------------
 
                     if( mHttpRequestBase instanceof HttpPost ) {
-                        List<NameValuePair> keyValues = onWritePostBody();
+                        String keyValues = onWritePostBody();
                         if( keyValues != null ) {
                             try {
-                                ((HttpPost) mHttpRequestBase).setEntity( new UrlEncodedFormEntity( keyValues ) );
+                                ((HttpPost) mHttpRequestBase).setEntity( new StringEntity( keyValues ) /*new UrlEncodedFormEntity( keyValues )*/ );
                             }
                             catch( UnsupportedEncodingException _e ) {
                                 LL.d( ":| Ignore setting data on HTTP-POST" );
@@ -396,14 +395,29 @@ public class LLRequest extends AsyncTask<Object, Object, Exception>
             _req.setHeader( "User-Agent", mUserAgent );
         }
         _req.setHeader( "Accept-Encoding", "gzip" );
+        if( mMethod == Method.POST ){
+            _req.setHeader( "Content-type", "application/x-www-form-urlencoded" );
+        }
     }
 
+//    /**
+//     * Handler when a POST request need body.
+//     *
+//     * @return the {@link List} that are written in request body.
+//     */
+//    protected List<NameValuePair> onWritePostBody() {
+//        // List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+//        // _nameValuePairs.add(new BasicNameValuePair("id", "12345"));
+//        // _nameValuePairs.add(new BasicNameValuePair("stringdata", "Hi"));
+//        return null;
+//    }
+    
     /**
      * Handler when a POST request need body.
      *
      * @return the {@link List} that are written in request body.
      */
-    protected List<NameValuePair> onWritePostBody() {
+    protected String onWritePostBody() {
         // List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         // _nameValuePairs.add(new BasicNameValuePair("id", "12345"));
         // _nameValuePairs.add(new BasicNameValuePair("stringdata", "Hi"));

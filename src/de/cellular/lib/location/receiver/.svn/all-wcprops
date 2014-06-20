@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/a/eclipselabs.org/android-utils/!svn/ver/32/trunk/src/com/gmail/at/hasszhao/utils/location/receiver
+END
+NetworkLocationChangedReceiver.java
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/a/eclipselabs.org/android-utils/!svn/ver/32/trunk/src/com/gmail/at/hasszhao/utils/location/receiver/NetworkLocationChangedReceiver.java
+END
+BestLocationChangeReceiver.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/a/eclipselabs.org/android-utils/!svn/ver/32/trunk/src/com/gmail/at/hasszhao/utils/location/receiver/BestLocationChangeReceiver.java
+END
+GPSLocationChangedReceiver.java
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/a/eclipselabs.org/android-utils/!svn/ver/32/trunk/src/com/gmail/at/hasszhao/utils/location/receiver/GPSLocationChangedReceiver.java
+END

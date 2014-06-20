@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/a/eclipselabs.org/android-utils/!svn/ver/32/trunk/src/com/gmail/at/hasszhao/utils/location/base
+END
+LocationUpdateBroadcastReceiver.java
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/a/eclipselabs.org/android-utils/!svn/ver/32/trunk/src/com/gmail/at/hasszhao/utils/location/base/LocationUpdateBroadcastReceiver.java
+END
+ILocationUpdateListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/a/eclipselabs.org/android-utils/!svn/ver/32/trunk/src/com/gmail/at/hasszhao/utils/location/base/ILocationUpdateListener.java
+END
+LocationUpdateRequester.java
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/a/eclipselabs.org/android-utils/!svn/ver/32/trunk/src/com/gmail/at/hasszhao/utils/location/base/LocationUpdateRequester.java
+END
+ILastLocationFinder.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/a/eclipselabs.org/android-utils/!svn/ver/32/trunk/src/com/gmail/at/hasszhao/utils/location/base/ILastLocationFinder.java
+END

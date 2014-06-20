@@ -1,8 +1,0 @@
-package com.gmail.at.hasszhao.utils.location.receiver;
-
-import com.gmail.at.hasszhao.utils.location.base.LocationUpdateBroadcastReceiver;
-
-public class BestLocationChangeReceiver extends LocationUpdateBroadcastReceiver
-{
-
-}

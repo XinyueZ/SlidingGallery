@@ -1,0 +1,4 @@
+SlidingGallery
+==============
+
+A sliding gallery

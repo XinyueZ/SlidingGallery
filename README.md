@@ -1,4 +1,4 @@
 SlidingGallery
 ==============
 
-A sliding gallery
+A small libray for a sliding gallery.
